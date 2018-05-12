@@ -1,0 +1,261 @@
+<?php include_once 'views/admin/layout/'.$this->layout.'header.php'; ?>
+<script type="text/javascript">
+	var numAllUser = parseInt(<?php echo $this->numAllUsers; ?>);
+	var num_user_perPage = parseInt(<?php echo NUM_TOP_USERS; ?>);
+</script>
+
+<section class="content-header">
+  <h1>
+    Users
+    <small>Control panel</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active">Dashboard</li>
+  </ol>
+</section>
+
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+			    <div class="box-header">
+			      <h3 class="box-title">Data Table With Full Features</h3>
+			    </div>
+			    <!-- /.box-header -->
+			    
+			    <div class="box-body">
+			    	<div id="table_wrapper" class="dataTables_wrapper form-inline dt-boostrap">
+			    		<div class="row">
+			    			<div class="col-sm-6">
+			    				<div class="dataTables_length" id="example1_length">
+			    					<label>
+			    						Show
+			    						<select name="example1_length" aria-controls = "example1" class="form-control input-sm">
+			    							<option value="10">10</option>
+			    							<option value="25">25</option>
+			    							<option value="50">50</option>
+			    							<option value="100">100</option>
+			    						</select>
+			    						entries
+			    					</label>
+			    				</div>
+			    			</div>
+			    			<div class="col-sm-6">
+			    				<div id="table_filter" class="pull-right">
+			    					<label>Search:
+			    						<div class="input-group">
+										    <input type="text" class="form-control input-sm" aria-controls="example1" placeholder="Search">
+										    <div class="input-group-btn">
+										      <button id="submit-search" class="btn btn-default btn-sm">
+										        <i class="glyphicon glyphicon-search"></i>
+										      </button>
+										    </div>
+										</div>
+			    					</label>
+			    				</div>
+			    			</div>
+			    		</div>
+
+			    		<div class="row">
+			    			<div class="col-sm-6">
+			    				<button id="add-user" type = "button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+			    					<i class="fa fa-plus"></i>
+			    				</button>	
+			    				
+			    				<button id="delete-users" class="btn btn-danger">
+			    					<i class="fa fa-trash-o"></i>
+			    				</button>
+			    			</div>
+			    		</div>
+
+			    		<div class="row">
+			    			<div class="col-sm-12">
+			    				<table id="table_user_ctent" class="table table-bordered table-striped dataTable" role = "grid" aria-describedby = "example1_info">
+			    					<thead>
+			    						<tr role="row">
+			    							<th id="checkboxAll" class="checkboxUser" style="width: 10px;">
+			    								<input type="checkbox" name="">
+			    							</th>
+			    							<th style="width: 50px;">Username</th>
+			    							<th style="width: 100px;">Email</th>
+			    							<th style="width: 50px;">Status</th>
+			    							<th style="width: 50px;">Date Create</th>
+			    							<th style="width: 50px;">Action</th>
+			    						</tr>
+			    					</thead>
+			    					<tbody id="tbody-users">
+			    						
+			    						<!-- rowDATA -->
+
+			    						<?php foreach ($this->rowTop10 as $key => $value) { ?>
+			    						<tr role="row">
+			                  <td id="<?php echo("checkbox".$value['id']);?>" class="checkboxUser">
+			                  	<input type="checkbox" name="">
+			                  </td>
+			                  <td id="<?php echo("username".$value['id']);?>">
+			                  	<?php echo $value['username']; ?>		
+			                  </td>
+			                  <td id="<?php echo("email".$value['id']);?>">
+			                  	<?php echo $value['email']; ?>
+			                  </td>
+			                  <td id="<?php echo("status".$value['id']);?>">
+			                  	<?php 
+			                  	switch ($value['status']) {
+			                  		case '0':
+			                  			echo "Disable";
+			                  			break;
+			                  		case '2':
+			                  			echo "Enable";
+			                  			break;
+			                  		case '1':
+			                  			echo "Creating";
+			                  			break;
+			                  		default:
+			                  			echo "Unknown";
+			                  			break;
+			                  	} 
+			                  ?></td>
+			                  <td id="<?php echo("created".$value['id']);?>">
+			                  	<?php echo $value['created']; ?>
+			                  </td>
+			                  <td  class="btn-act" class="pull-right">
+			                  	<button id="<?php echo("view".$value['id']);?>" type="button" class="btn btn-success view-user" data-toggle="modal" data-target="#myModal">
+			                  		<i class="fa fa-search-plus" aria-hidden="true"></i>
+			                  	</button>
+			                  	<button id="<?php echo("edit".$value['id']);?>" type="button" class="btn btn-primary edit-user" data-toggle="modal" data-target="#myModal">
+			                  		<i class="fa fa-pencil"></i>
+			                  	</button>
+			                  	<button id="<?php echo("dele".$value['id']);?>" type="button" class="btn btn-danger dele-user">
+			                  		<i class="fa fa-trash-o"></i>
+			                  	</button>
+			                  </td>
+			                </tr>
+			                <?php } ?>
+			                <!-- rowDATA -->
+
+			    					</tbody>
+
+			    					<tfoot>
+		                	<tr>
+		                		<th rowspan="1" colspan="1"><i class="fa fa-check-square-o" aria-hidden="true"></i></th>
+		                		<th rowspan="1" colspan="1">Username</th>
+		                		<th rowspan="1" colspan="1">Email</th>
+		                		<th rowspan="1" colspan="1">Status</th>
+		                		<th rowspan="1" colspan="1">Date created</th>
+		                		<th rowspan="1" colspan="1">Action</th>
+		                	</tr>
+		                </tfoot>
+			    				</table>
+			    			</div>
+			    		</div>
+
+			    		<div class="row">
+			    			<div class="col-sm-5"><div class="dataTables_info" id="table_info" role="status" aria-live="polite">
+			    				<?php echo "Showing 1 to ".NUM_TOP_USERS." of {$this->numAllUsers} entries"; ?>
+			    			</div></div>
+
+			    			<div class="col-sm-7">
+			    				<div class="dataTables_paginate paging_simple_numbers" id="table_paginate">
+			    					<ul class="pagination pull-right">
+			    						<li class="paginate_button previous disabled" id="table_previous">
+			    							<a href="javascript:void(0);" aria-controls="example1" data-dt-idx="0" tabindex="0">Previous</a>
+			    						</li>
+
+			    						<?php for($i = 1; $i <= ceil($this->numAllUsers/NUM_TOP_USERS); $i++){ ?>
+											<li class="paginate_button <?php if($i==1) echo('active') ?>">
+												<a href="javascript:void(0);" aria-controls="example1" data-dt-idx="<?php echo($i); ?>" tabindex="0"><?php echo($i); ?></a>
+											</li>
+										<?php } ?>
+
+											<li class="paginate_button next" id="table_next">
+												<a href="javascript:void(0);" aria-controls="example1" data-dt-idx="<?php echo(ceil($this->numAllUsers/NUM_TOP_USERS)+1) ?>" tabindex="0">Next
+												</a>
+			    						</li>
+			    					</ul>
+			    				</div>
+			    			</div>
+			    		</div>
+			    	</div>
+			    </div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div id="modal-user">
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <table class="table table-hover">
+			    	<thead>
+				      <tr class="row">
+				        <th class="col-sm-4">COLUMN</th>
+				        <th class="col-sm-8">VALUE</th>
+				      </tr>
+				    </thead>
+				    <tbody id="modal-body">
+				      <tr id="username-modal" class="row">
+				        <td class="col-sm-4">Username</td>
+				        <td class="col-sm-8">Jr</td>
+				      </tr>
+				     	<tr id="email-modal" class="row">
+				        <td class="col-sm-4">Email</td>
+				        <td class="col-sm-8">Value</td>
+				      </tr>
+				      <tr id="avata-modal" class="row">
+				        <td class="col-sm-4">Avata</td>
+				        <td class="col-sm-8">Value</td>
+				      </tr>
+				      <tr id="firstname-modal" class="row">
+				        <td class="col-sm-4">First name</td>
+				        <td class="col-sm-8">Value</td>
+				      </tr>
+				      <tr id="lastname-modal" class="row">
+				        <td class="col-sm-4">Last name</td>
+				        <td class="col-sm-8">Value</td>
+				      </tr>
+				      <tr id="phone-modal" class="row">
+				        <td class="col-sm-4">Phone number</td>
+				        <td class="col-sm-8">Value</td>
+				      </tr>
+				      <tr id="address-modal" class="row">
+				        <td class="col-sm-4">Address</td>
+				        <td class="col-sm-8">Value</td>
+				      </tr>
+				      <tr id="role-modal" class="row">
+				        <td class="col-sm-4">Role</td>
+				        <td class="col-sm-8"></td>
+				      </tr>
+				      <tr id="status-modal" class="row">
+				        <td class="col-sm-4">Status</td>
+				        <td class="col-sm-8"></td>
+				      </tr>
+				      <tr id="created-modal" class="row">
+				        <td class="col-sm-4">Created</td>
+				        <td class="col-sm-8"></td>
+				      </tr>
+				    </tbody>
+				  </table>					
+        </div>
+        <div class="modal-footer">
+          <button id="submit-btn-view" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button id="submit-btn-add" type="button" class="btn btn-default" data-dismiss="modal">Add New</button>
+          <button id="submit-btn-done" type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+  <!-- /.box -->
+<?php include_once 'views/admin/layout/'.$this->layout.'footer.php'; ?>

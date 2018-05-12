@@ -1,0 +1,9 @@
+RewriteEngine On
+ 
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$ index.php?pr=$1 [L,QSA]
+
+#dung de bao loi khi nguoi dung nhap vao duong dan thu muc
+#Options All -Indexes
