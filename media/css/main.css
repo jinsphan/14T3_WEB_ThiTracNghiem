@@ -8,6 +8,17 @@ a {
     text-decoration: none !important;
 }
 
+.btn-v2 {
+    border: none;
+    outline: none;
+    background-color: #ec5c51;
+    color: white;
+}
+
+.btn-v2:hover {
+    background-color: #e8463a;
+}
+
 .bg-main {
     background-color: #ec5c51 !important;;
     color: white !important;;
