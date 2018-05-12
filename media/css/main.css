@@ -1,25 +1,105 @@
 body {
-  padding-top: 70px;
-  padding-bottom: 30px;
+    background: url("../img/home/top-bg.jpg") top center repeat-x, url("../img/home/body-bottom.jpg") bottom center no-repeat;
+    height: 1000px;
+    font-family: Arial, Helvetica, sans-serif;
 }
-.theme-showcase .navbar .container {
-  width: auto;
+
+a {
+    text-decoration: none;
 }
-.navbar-header .navbar-brand {text-transform: uppercase;}
-.table a.table-link {
-	font-size: 1.125em;
-	color: #03a9f4;
-	text-decoration: none;
+
+header {
+    padding: 15px 0;
 }
-.table a.table-link:hover {
-	color: #2980b9;
+
+header .login-regiser-btn {
+    text-align: right;
 }
-.table a.table-link.danger {
-	color: #e84e40;
+
+header .login-regiser-btn > div {
+    display: inline-block;
+    padding: 9px 40px;
 }
-.table .img-thumbnail {
-	max-height: 200px;
+
+header .login-regiser-btn > div a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
 }
-#modal-user{
-	
+
+header .login-regiser-btn .login-btn {
+    margin-right: 15px;
+    background: url("../img/home/btn_login.png") no-repeat;
+}
+
+header .login-regiser-btn .register-btn {
+    background: url("../img/home/btn_register.png") no-repeat;
+    padding-right: 50px;
+}
+
+header .login-regiser-btn .register-btn a {
+    color: black;
+}
+
+
+
+.home-container .container{
+    background-color: white;
+    box-shadow: 0 0 5px grey;
+}
+
+.menu-container {
+    margin: 15px 0;
+    box-shadow: 0 0 5px black;
+}
+
+.menu-container {
+    height: 50px;
+    border-radius: 50px;
+    padding: 0 30px;
+    background-color: #ec5c51;
+}
+
+.menu-container .menu-list ul {
+    margin: 0 !important;
+    padding-left: 0;
+}
+
+.menu-container .menu-list ul li {
+    list-style: none;
+    display: inline;
+    margin-right: 30px;
+    position: relative;
+}
+
+.menu-container .menu-list ul li a {
+    color: rgb(230, 230, 230);
+    line-height: 50px;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.menu-container .menu-list ul li a:hover {
+    color: rgb(255, 255, 255);
+}
+
+.menu-container .menu-list ul li a .fa-sort-down{
+    height: 26px;
+}
+
+.menu-container .menu-list ul li a .input-nhap-ma-code {
+    display: inline-block;
+    /* margin-left: 5px; */
+    position: absolute;
+    left: 35px;
+    top: -11px;
+    width: 150px;
+
+}
+
+.menu-container .search-container {
+    float: right;
+    margin: 8px 0;
+    width: 250px;
 }
