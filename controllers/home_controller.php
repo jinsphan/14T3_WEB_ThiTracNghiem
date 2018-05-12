@@ -1,6 +1,6 @@
 <?php
 //include "models/home_model.php"; 
-class home_controller extends vendor_main_controller
+class home_controller extends main_controller
 {
 	public function index() 
 	{

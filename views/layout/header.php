@@ -9,16 +9,16 @@
     <div class="row">
       <div class="col-md-6">
         <div class="logo">
-          <img src="/media/img/home/foo-logo.png" alt="">
+          <a href="/"><img src="/media/img/home/foo-logo.png" alt=""></a>
         </div>
       </div>
       <div class="col-md-6">
         <div class="login-regiser-btn">
           <div class="login-btn">
-            <a href="">Đăng nhập</a>
+            <a href="/login">Đăng nhập</a>
           </div>
           <div class="register-btn">
-            <a href="">Đăng kí</a>
+            <a href="/register">Đăng kí</a>
           </div>
         </div>
       </div>
@@ -32,10 +32,17 @@
                 <i class="fas fa-book"></i> 
                 Môn <i class="fas fa-sort-down"></i>
               </a>
+              <ul class="menu-dropdown">
+                <li><a href="">Toan</a></li>
+                <li><a href="">Li</a></li>
+                <li><a href="">Hoa</a></li>
+                <li><a href="">Anh van</a></li>
+                <li><a href="">Mtp</a></li>
+              </ul>
             </li>
 
             <li>
-              <a href="">
+              <a href="/quiz/add">
                 <i class="fas fa-cloud-upload-alt"></i>
                 Tạo bài thi
               </a>

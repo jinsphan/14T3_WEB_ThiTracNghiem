@@ -5,7 +5,29 @@ body {
 }
 
 a {
-    text-decoration: none;
+    text-decoration: none !important;
+}
+
+.bg-main {
+    background-color: #ec5c51 !important;;
+    color: white !important;;
+}
+
+.cl-main {
+    color: #ec5c51 !important;
+}
+
+.require-form {
+    color: #ec5c51 !important;
+}
+
+.cl-main:hover {
+    color: #e8463a !important;
+}
+
+
+.box-shadow {
+    box-shadow: 0 0 5px grey;
 }
 
 header {
@@ -42,13 +64,6 @@ header .login-regiser-btn .register-btn a {
     color: black;
 }
 
-
-
-.home-container .container{
-    background-color: white;
-    box-shadow: 0 0 5px grey;
-}
-
 .menu-container {
     margin: 15px 0;
     box-shadow: 0 0 5px black;
@@ -61,39 +76,44 @@ header .login-regiser-btn .register-btn a {
     background-color: #ec5c51;
 }
 
-.menu-container .menu-list ul {
+.menu-container .menu-list > ul {
     margin: 0 !important;
     padding-left: 0;
-}
-
-.menu-container .menu-list ul li {
-    list-style: none;
-    display: inline;
-    margin-right: 30px;
     position: relative;
 }
 
-.menu-container .menu-list ul li a {
+.menu-container .menu-list > ul > li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.menu-container .menu-list > ul li a {
     color: rgb(230, 230, 230);
     line-height: 50px;
     text-decoration: none;
     font-size: 20px;
+    position: relative;
 }
 
-.menu-container .menu-list ul li a:hover {
+.menu-container .menu-list > ul li:hover > .menu-dropdown {
+    display: block;
+}
+
+.menu-container .menu-list > ul li a:hover {
     color: rgb(255, 255, 255);
 }
 
-.menu-container .menu-list ul li a .fa-sort-down{
+.menu-container .menu-list > ul li a .fa-sort-down{
     height: 26px;
 }
 
-.menu-container .menu-list ul li a .input-nhap-ma-code {
+.menu-container .menu-list > ul li a .input-nhap-ma-code {
     display: inline-block;
     /* margin-left: 5px; */
     position: absolute;
     left: 35px;
-    top: -11px;
+    top: -6px;
     width: 150px;
 
 }
@@ -102,4 +122,83 @@ header .login-regiser-btn .register-btn a {
     float: right;
     margin: 8px 0;
     width: 250px;
+}
+
+
+.menu-container .menu-dropdown {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 105%;
+    background-color: #ec5c51;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 10px grey; 
+    z-index: 5;
+}
+
+.menu-container .menu-dropdown li {
+    display: block;
+    width: 150px;
+    background-color: #d23327;
+    border-radius: 15px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+}
+
+.menu-container .menu-dropdown li a {
+    display: inline-block;
+    line-height: 30px;
+    width: 100%;
+}
+
+.menu-container .menu-dropdown li:hover {
+    background-color: rgb(254, 232, 159);
+    color: black;
+}
+
+.menu-container .menu-dropdown li:hover a {
+    color: black !important;
+}
+
+
+/* HOME  */
+.home-container .container .home-content{
+    padding: 0 50px;
+}
+
+.home-container .container .home-content .exam-item-container {
+    box-shadow: 0 0 5px grey;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.home-container .container .home-content .exam-item-container .exam-cover-item {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.home-container .container .home-content .exam-item-container .exam-cover-item img {
+    width: 100%;
+}
+
+
+.home-container .container .home-content .exam-item-container .title {
+    margin-top: 10px;
+}
+
+.home-container .container .home-content .exam-item-container .title a{
+    color: #ec5c51;
+}
+
+.home-container .container .home-content .exam-item-container .title a:hover{
+    color: #ff7b72;
+}
+
+.home-container .container .home-content .exam-item-container .info span {
+    color: gray;
+    font-size: 11px;
+    margin-right: 10px;
 }

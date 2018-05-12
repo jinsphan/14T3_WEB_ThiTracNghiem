@@ -1,0 +1,43 @@
+.login-container .login-content{
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.login-container .login-content .title-login {
+    width: 300px;
+    margin: 0 auto;
+    border-bottom: 1px solid rgb(230, 230, 230);
+}
+
+.login-container .login-content .title-login h3 {
+    font-weight: bold;
+    text-align: center;
+}
+
+.login-form-container {
+    width: 400px;
+    margin: 0 auto;
+
+}
+
+.submit-container {
+    text-align: center;
+}
+
+.submit-container button {
+    padding: 5px 70px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* .submit-container a {
+    color: 
+} */
+
+.description {
+    max-width: 100%;
+    min-width: 100%;
+}
