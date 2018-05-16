@@ -36,6 +36,10 @@ a {
     color: #e8463a !important;
 }
 
+.hidden {
+    display: none;
+}
+
 
 .box-shadow {
     box-shadow: 0 0 5px grey;

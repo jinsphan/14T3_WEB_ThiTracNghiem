@@ -14,12 +14,17 @@
       </div>
       <div class="col-md-6">
         <div class="login-regiser-btn">
-          <div class="login-btn">
-            <a href="/login">Đăng nhập</a>
-          </div>
-          <div class="register-btn">
-            <a href="/register">Đăng kí</a>
-          </div>
+          <?php if (!isset($_SESSION["loginUser"]["username"])) { ?>
+            <div class="login-btn">
+              <a href="/login">Đăng nhập</a>
+            </div>
+            <div class="register-btn">
+              <a href="/register">Đăng kí</a>
+            </div>
+          <?php } else { ?>
+            <span>Xin chao admin!</span>
+            <button class="btn bg-main"><a href="/user/logout">Log out</a></button>
+          <?php } ?>
         </div>
       </div>
     </div>

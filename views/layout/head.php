@@ -12,6 +12,7 @@
     <link href="<?php echo RootREL; ?>media/css/main.css" rel="stylesheet">
 
     <script src="<?php echo RootREL; ?>media/libs/js/jquery.min.js"></script>
+    <script src="<?php echo RootREL; ?>media/libs/momentjs/moment.js" ></script>
     <script src="<?php echo RootREL; ?>media/libs/font-awesome/js/fontawesome-all.min.js"></script>
     <script src="<?php echo RootREL; ?>media/bootstrap/js/bootstrap.min.js"></script>
 </head>
