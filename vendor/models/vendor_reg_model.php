@@ -17,7 +17,7 @@ class vendor_reg_model extends vendor_main_model {
     
         try {
             $stmt->execute($datas);
-            return true;    
+            return true; 
         } catch(Exception $e) {
             return false;
         }

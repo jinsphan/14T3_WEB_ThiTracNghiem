@@ -15,11 +15,19 @@ class html_helper{
 		}
 		$params = '';
 		if(isset($options['params']) and $options['params']) {
-			foreach($options['params'] as $k=>$v) {
-				$params .= '/'.$k.'='.$v;
-			}
+			if(html_helper::isAssoc($options["params"]))
+				foreach($options['params'] as $k=>$v) {
+					$params .= '/'.$k.'='.$v;
+				}
+			else
+				$params = implode("/", $options["params"]);
 		}
 		return "/".$options['ctl'].$act.$params;
+	}
+
+	protected static function isAssoc(array $arr) {
+		if(array() === $arr) return false;
+		return array_keys($arr) !== range(0, count($arr) - 1);
 	}
 }
 ?>

@@ -1,14 +1,25 @@
 <?php
-    class quiz_controller extends vendor_main_controller {
+    class quiz_controller extends main_controller {
         public function index() {
             $this->display();
         }
 
-        public function add() {
-            $this->display();
+        public function create() {
+            $this->checkLoggedIn();
+            if($_SERVER["REQUEST_METHOD"] == "GET") {
+                $this->display();
+            }
+            
+            if($_SERVER["REQUEST_METHOD"] == "POST") {
+                
+            }
         }
 
-        public function start($id_quiz) {
+        public function start($params = null) {
+            $this->checkLoggedIn();
+            if($params != null) {
+                $this->quiz_id = $params[1];
+            }
             $this->data_quiz = [
                 [
                     "name_question" => "Lựa ch đúng nhất:",
@@ -54,5 +65,12 @@
             $this->display();
         }
         
+        public function confirm($params = null) {
+            $this->checkLoggedIn();
+            if($params != null) {
+                $this->quiz_id = $params[1];
+                $this->display();
+            }
+        }
     }
 ?>
