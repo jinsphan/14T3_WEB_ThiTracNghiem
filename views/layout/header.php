@@ -42,7 +42,7 @@
             </li>
 
             <li>
-              <a href="/quiz/add">
+              <a href="/quiz/create">
                 <i class="fas fa-cloud-upload-alt"></i>
                 Tạo bài thi
               </a>

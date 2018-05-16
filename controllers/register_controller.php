@@ -55,6 +55,7 @@
                                 "sex"      => $sex,
                                 "date_of_birth" => $date_of_birth
                             ];
+                            die(var_dump($reg->register($data)));
                             if($reg->register($data)) {
                                 $this->success = "Đăng ký tài khoản thành công, vui lòng đăng nhập để thực hiện các chức năng!";
                                 $this->display();

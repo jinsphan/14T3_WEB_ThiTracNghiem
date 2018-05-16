@@ -12,7 +12,7 @@
             <br>
 
             <div class="login-form-container">
-                <form action="/quiz/add" method="POST" >
+                <form action="/quiz/create" method="POST" >
                     <div class="form-group">
                         <label for="name">Tên bài thi:</label>
                         <input type="text" class="form-control" id="name">

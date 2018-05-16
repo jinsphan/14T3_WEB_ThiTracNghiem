@@ -44,4 +44,3 @@
     </div>
 </div>
 
-<?php include_once 'views/layout/'.$this->layout.'footer.php'; ?>
