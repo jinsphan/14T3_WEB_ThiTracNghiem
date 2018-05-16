@@ -70,7 +70,7 @@ class vendor_crud_model extends vendor_main_model {
             $stmt->execute($datas);
             return true;    
         } catch(Exception $e) {
-            die($e->getMessage());
+            return false;
         }
     }
 
