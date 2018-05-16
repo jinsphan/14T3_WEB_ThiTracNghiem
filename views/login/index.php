@@ -1,4 +1,4 @@
-<?php include_once 'views/layout/'.$this->layout.'header.php'; ?>
+<?php require_once 'views/layout/'.$this->layout.'header.php'; ?>
 
 <link href="<?php echo RootREL; ?>media/css/login.css" rel="stylesheet">
 
@@ -15,14 +15,17 @@
                 <form action="/login" method="POST" >
                     <div class="form-group">
                         <label for="username">Tên đăng nhập:</label>
-                        <input type="username" class="form-control" id="username">
+                        <input type="username" class="form-control" id="username" name="username">
                     </div>
                     <div class="form-group">
                         <label for="pwd">Mật khẩu:</label>
-                        <input type="password" class="form-control" id="pwd">
+                        <input type="password" class="form-control" id="pwd" name="password">
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox"> Tự động đăng nhập lần sau</label>
+                        <label><input type="checkbox" name="auto-login"> Tự động đăng nhập lần sau</label>
+                    </div>
+                    <div class="form-group">
+                        <span class="text-danger"><?php echo $this->error ?></span>
                     </div>
                     <div class="submit-container">
                         <button type="submit" class="btn-submit bg-main">Đăng nhập</button>

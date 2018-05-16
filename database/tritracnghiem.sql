@@ -73,16 +73,15 @@ INSERT INTO subject_relationships(parent_subject_id, child_subject_id) VALUES
 
 CREATE TABLE accounts(
     account_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(100) UNIQUE,
-    password VARCHAR(100),
-    salt VARCHAR(100),
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(60) NOT NULL,
     fullname VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
     sex VARCHAR(3) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
     date_of_birth DATE,
-    date_created DATETIME DEFAULT NOW(),
+    date_created DATETIME DEFAULT NOW() NOT NULL,
     date_edited TIMESTAMP,
-    role_id INT UNSIGNED,
-    account_status BOOL,
+    role_id INT UNSIGNED DEFAULT 2,
+    account_status BOOL DEFAULT 1,
 
     FOREIGN KEY(role_id)
         REFERENCES roles(role_id)
@@ -145,3 +144,7 @@ CREATE TABLE exam_histories(
     num_of_wrong INT UNSIGNED,
     date_created DATETIME DEFAULT NOW()
 );
+
+
+INSERT INTO accounts(username, password, role_id, account_status) VALUES 
+    ("admin", "$2y$10$mzQ8gD/Bkr4dJtaqwYBO.OgvBtw4O080v/acfO106jSDIQqKIVBK2", 1, 1);

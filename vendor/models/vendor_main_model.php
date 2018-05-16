@@ -5,12 +5,11 @@ class vendor_main_model {
     protected $table;
     public function __construct() {
         try {
-            $conn = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=".DB_CHARSET,
+            $this->conn = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=".DB_CHARSET,
                             DB_USER,
                             DB_PASSWORD,
                             DB_OPTIONS
                             );
-            
             if(!$this->table) $this->setTableName();
         } catch(PDOException $e) {
             die($e->getMessage());

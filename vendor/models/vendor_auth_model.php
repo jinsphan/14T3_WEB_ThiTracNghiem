@@ -2,8 +2,11 @@
 
 class vendor_auth_model extends vendor_main_model {
 
+    public function __construct() {
+        parent::__construct();
+    }
     public function login($user) {
-        $sql = "SELECT username, password, salt, role_id FROM accounts WHERE username = :username";
+        $sql = "SELECT username, password, role_id, fullname FROM accounts WHERE username = :username";
         
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":username", $user["username"]);
@@ -15,13 +18,13 @@ class vendor_auth_model extends vendor_main_model {
         else {
             $record = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $password = vendor_app_util::generatePassword($user["password"], $record["salt"]);
-
-            if($password != $record["password"])
-                return false;
-            
-            $_SESSION["loginUser"]["username"] = $record["username"];
-            $_SESSION["loginUser"]["role_id"] = $record["role_id"];
+            if(password_verify($user["password"], $record["password"])) {
+                $_SESSION["loginUser"]["username"] = $record["username"];
+                $_SESSION["loginUser"]["role_id"] = $record["role_id"];
+                $_SESSION["loginUser"]["fullname"] = $record["fullname"];
+                return true;
+            }
+            return false;
         }
     }
 }

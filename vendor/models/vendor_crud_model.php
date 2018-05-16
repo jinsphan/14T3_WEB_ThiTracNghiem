@@ -1,6 +1,11 @@
 <?php 
 
 class vendor_crud_model extends vendor_main_model {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
     
     public function readAllRecords($field="*", $options = null) {
         $conditions = "";
@@ -59,13 +64,13 @@ class vendor_crud_model extends vendor_main_model {
                 implode(", ", array_keys($datas)),
                 ":".implode(", :", array_keys($datas)));
         
-        $stmt = $this->conn-prepare($sql);
+        $stmt = $this->conn->prepare($sql);
     
         try {
             $stmt->execute($datas);
             return true;    
         } catch(Exception $e) {
-            return false;
+            die($e->getMessage());
         }
     }
 

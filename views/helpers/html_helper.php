@@ -5,9 +5,6 @@ class html_helper{
 			return 'index.php';
 			
 		global $app;
-		if(!isset($options['area'])) {
-			$options['area'] = $app["areaPath"];
-		}
 		if(!isset($options['ctl'])) {
 			$options['ctl'] = $app["ctl"];
 		}
