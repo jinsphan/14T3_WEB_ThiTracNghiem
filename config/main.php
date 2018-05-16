@@ -21,8 +21,19 @@ define('ControllerAdminREL', ControllerREL."/".AdminPath);
 // Config for database
 define('DB_HOST','localhost');
 define('DB_USER','root');
-define('DB_PASSWORD','1234');
-define('DB_NAME','thitracnghiem');
+
+// TODO: BEFORE PUSH
+// Keep this
+
+// define('DB_PASSWORD','1234');
+// define('DB_NAME','thitracnghiem');
+
+// Remove this
+define('DB_PASSWORD','root');
+define('DB_NAME','project_thayha_thitracnghiem');
+//--------------------
+
+
 define("DB_CHARSET", "utf8");
 define("DB_OPTIONS", [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
