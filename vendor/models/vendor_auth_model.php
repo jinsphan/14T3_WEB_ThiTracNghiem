@@ -1,16 +1,29 @@
-<?php
+<?php 
+
 class vendor_auth_model extends vendor_main_model {
-	//public static function login($username, $password) {
-	public function login($user) {
-		$email = $user['email'];
-		$password = vendor_app_util::generatePassword($user['password']);
-		$query = "SELECT * FROM `users` WHERE (`email` = '".$email."') & (`password` = '".$password."')";
-		$result = mysqli_query($this->con,$query);
-		if ($result->num_rows > 0) {
-			$_SESSION['loginUser'] = mysqli_fetch_array($result); 
-			return 1;
-		}
-		return 0;
-	}
+
+    public function login($user) {
+        $sql = "SELECT username, password, salt, role_id FROM accounts WHERE username = :username";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":username", $user["username"]);
+
+        $stmt->execute();
+        if($stmt->rowCount() != 1) {
+            return false;
+        }
+        else {
+            $record = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $password = vendor_app_util::generatePassword($user["password"], $record["salt"]);
+
+            if($password != $record["password"])
+                return false;
+            
+            $_SESSION["loginUser"]["username"] = $record["username"];
+            $_SESSION["loginUser"]["role_id"] = $record["role_id"];
+        }
+    }
 }
-	
+
+?>

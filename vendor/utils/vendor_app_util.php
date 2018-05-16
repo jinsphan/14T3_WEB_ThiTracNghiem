@@ -26,8 +26,27 @@ class vendor_app_util {
 		return RootREL.$options['area'].'/'.$options['ctl'].$act.$params;
 	}
 	
-	public static function generatePassword ($strPass) {
-		return md5($strPass);
-	}
+	public static function generatePassword($strPass, $strSalt = null) {
+        if($strSalt) {
+            $options = [
+                "cost" => 11,
+                "salt" => $strSalt
+            ];
+            return [
+                "hashPass" => password_hash($strPass, PASSWORD_BCRYPT, $options)
+            ];
+        }
+        else {
+            $strSalt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
+            $options = [
+                "cost" => 11,
+                "salt" => $strSalt
+            ];
+            return [
+                "hashPass" => password_hash($strPass, PASSWORD_BCRYPT, $options),
+                "strSalt" => $strSalt
+            ];
+        }
+    }
 }
 ?>
