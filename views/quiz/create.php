@@ -97,6 +97,7 @@
         </div>
     </div>
 </div>
+<script src="/media/libs/js/xlsx.js"></script>
 <script src="/media/js/add_quiz.js"></script>
 
 <?php include_once 'views/layout/'.$this->layout.'footer.php'; ?>

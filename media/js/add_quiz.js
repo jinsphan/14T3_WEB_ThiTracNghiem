@@ -1,9 +1,13 @@
 $(document).ready(function() {
+
+    let dataFile = [];
+
     $("#form_type_quiz input").on("click", e => {
         const key = $(e.target).attr("key"); 
         if (key == "1") $("#form-start-end-time-quiz").slideDown(200);
         else $("#form-start-end-time-quiz").slideUp(200);
     })
+
 
     $("#form_add_quiz").on("submit", e => {
         e.preventDefault();
@@ -32,7 +36,36 @@ $(document).ready(function() {
             is_random_questions,
             is_random_answers,
             is_redo,
+            xlsx_data: dataFile,
         }
         console.log(data);
+    });
+
+    const ExcelExport= function (event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+            var fileData = reader.result;
+            var wb = XLSX.read(fileData, {type : 'binary'});
+
+            wb.SheetNames.forEach(function(sheetName){
+                var rowObj =XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
+                var jsonObj = JSON.stringify(rowObj);
+                console.log(JSON.parse(jsonObj));
+                dataFile = JSON.parse(jsonObj);
+            })
+        };
+        reader.readAsBinaryString(input.files[0]);
+    };
+
+    const fi = document.getElementById("filequestion");
+    fi.addEventListener("change", e => {
+        // 
+        if (e.target.files[0].type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+            ExcelExport(e);
+        } else {
+            alert("Please insert correct files");
+            fi.value = "";
+        }
     })
 });
