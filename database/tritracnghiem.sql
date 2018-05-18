@@ -99,7 +99,7 @@ CREATE TABLE quizs(
     num_of_questions INT UNSIGNED,
     max_score INT UNSIGNED,
     max_time TIME,
-    is_random_questions BOOL,
+    is_random_question BOOL,
     is_random_answer BOOL,
     is_redo BOOL,
     date_created DATETIME DEFAULT NOW(),
