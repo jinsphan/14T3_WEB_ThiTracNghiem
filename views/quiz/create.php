@@ -15,8 +15,8 @@
             <div class="quiz-create-form-container">
                 <form id="form_add_quiz" action="/quiz/create" method="POST" >
                     <div class="form-group">
-                        <label for="name">Tên bài thi:</label>
-                        <input type="text" class="form-control" id="name" required>
+                        <label for="quiz_name">Tên bài thi:</label>
+                        <input type="text" class="form-control" id="quiz_name" required>
                     </div>
 
                     <div class="form-group">
@@ -25,8 +25,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="typemon">Thuộc môn:</label>
-                        <select class="form-control" id="typemon" required>
+                        <label for="subject_id">Thuộc môn:</label>
+                        <select class="form-control" id="subject_id" required>
                             <option value="1">Toán</option>
                             <option value="2">Lí </option>
                             <option value="3">Hóa</option>
@@ -37,8 +37,8 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="maxtime">Thời gian(min):</label>
-                                <input type="number" class="form-control" id="maxtime" required>
+                                <label for="max_time">Thời gian(min):</label>
+                                <input type="number" class="form-control" id="max_time" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="total_score">Tổng điểm:</label>
@@ -52,9 +52,9 @@
                         <input type="file" class="form-control" id="filequestion" required>
                     </div>
 
-                    <div class="checkbox" id="form_type_quiz">
-                        <label><input checked="checked" key="1" type="radio" name="type_quiz"> Private</label>
-                        <label><input key="2" type="radio" name="type_quiz"> Public</label>
+                    <div class="checkbox" id="form_quiz_type">
+                        <label><input checked="checked" key="1" type="radio" name="quiz_type_id"> Private</label>
+                        <label><input key="2" type="radio" name="quiz_type_id"> Public</label>
                     </div>
 
                     <div class="form-group" id="form-start-end-time-quiz">
@@ -73,10 +73,10 @@
                     <div class="checkbox">
                         <div class="row">
                             <div class="col-md-4">
-                                <label><input type="checkbox" name="is_random_questions"> Random questions</label>
+                                <label><input type="checkbox" name="is_random_question"> Random questions</label>
                             </div>
                             <div class="col-md-4 text-center">
-                                <label><input type="checkbox" name="is_random_answers"> Random answers</label>
+                                <label><input type="checkbox" name="is_random_answer"> Random answers</label>
                             </div>
                             <div class="col-md-4 text-right">
                                 <label><input type="checkbox" name="is_redo"> Allow redo</label>

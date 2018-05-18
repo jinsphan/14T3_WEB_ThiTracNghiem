@@ -19,6 +19,7 @@ class vendor_auth_model extends vendor_main_model {
             $record = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if(password_verify($user["password"], $record["password"])) {
+                $_SESSION["loginUser"]["account_id"] = $record["account_id"];
                 $_SESSION["loginUser"]["username"] = $record["username"];
                 $_SESSION["loginUser"]["role_id"] = $record["role_id"];
                 $_SESSION["loginUser"]["fullname"] = $record["fullname"];
