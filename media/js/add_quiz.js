@@ -42,7 +42,8 @@ $(document).ready(function() {
         $.ajax({
             url: "/quiz/create",
             method: 'POST',
-            body: data,
+            data,
+            dataType: "JSON",
             success: (data) => {
                 console.log(data);
             },
