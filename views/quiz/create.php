@@ -41,8 +41,8 @@
                                 <input type="number" class="form-control" id="max_time" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="total_score">Tổng điểm:</label>
-                                <input type="number" class="form-control" id="total_score" required>
+                                <label for="max_score">Tổng điểm:</label>
+                                <input type="number" class="form-control" id="max_score" required>
                             </div>
                         </div>
                     </div>

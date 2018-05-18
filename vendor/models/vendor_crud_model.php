@@ -7,12 +7,12 @@ class vendor_crud_model extends vendor_main_model {
         parent::__construct();
     }
     
-    public function readAllRecords($field="*", $options = null) {
+    public function readAllRecords($fields="*", $options = null) {
         $conditions = "";
         if(isset($options["conditions"])) {
             $conditions .= " WHERE ".$options["conditions"];
         }
-        $sql = "SELECT ".$field." FROM ".$this->table.$conditions;
+        $sql = "SELECT ".$fields." FROM ".$this->table.$conditions;
         
         $stmt = $this->conn->prepare($sql);
 
@@ -22,7 +22,7 @@ class vendor_crud_model extends vendor_main_model {
 
     }
 
-    public function readRecord($id = null, $fields = "*", $options = null) {
+    public function readRecord($fields = "*", $options = null) {
         $conditions = "";
         if(isset($options["conditions"])) {
             $conditions .= " AND ".$options["conditions"];

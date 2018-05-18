@@ -16,7 +16,7 @@ $(document).ready(function() {
         const subject_id = $("#form_add_quiz #subject_id").val();
 
         const max_time = $("#form_add_quiz #max_time").val();
-        const total_score = $("#form_add_quiz #total_score").val();
+        const max_score = $("#form_add_quiz #max_score").val();
         const quiz_type_id  = $("#form_add_quiz #form_quiz_type input:checked").attr("key");
         const datetime_start = $("#form_add_quiz #start_time_quiz").val();
         const datetime_finish = $("#form_add_quiz #end_time_quiz").val();
@@ -29,7 +29,7 @@ $(document).ready(function() {
             description,
             subject_id,
             max_time,
-            total_score,
+            max_score,
             quiz_type_id,
             datetime_start,
             datetime_finish,

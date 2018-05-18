@@ -15,14 +15,14 @@
                 $description = vendor_app_util::sanitizeInput(isset($_POST["description"]) ? $_POST["description"] : "");
                 $subject_id = (int)vendor_app_util::sanitizeInput(isset($_POST["subject_id"]) ? $_POST["subject_id"] : "");
                 $max_time = (int)vendor_app_util::sanitizeInput(isset($_POST["max_time"]) ? $_POST["max_time"] : "");
-                $total_score = (int)vendor_app_util::sanitizeInput(isset($_POST["total_score"]) ? $_POST["total_score"] : "");
+                $max_score = (int)vendor_app_util::sanitizeInput(isset($_POST["max_score"]) ? $_POST["max_score"] : "");
                 $quiz_type_id = (int)vendor_app_util::sanitizeInput(isset($_POST["quiz_type_id"]) ? $_POST["quiz_type_id"] : "");
                 $is_random_question = (int)(vendor_app_util::sanitizeInput(isset($_POST["is_random_question"]) ? $_POST["is_random_question"] : "") === "true" );
                 $is_random_answer = (int)(vendor_app_util::sanitizeInput(isset($_POST["is_random_answer"]) ? $_POST["is_random_answer"] : "") === "true" );
                 $is_redo = (int)(vendor_app_util::sanitizeInput(isset($_POST["is_redo"]) ? $_POST["is_redo"] : "") === "true" );
 
                 // check input
-                if($quiz_name == "" || $subject_id == 0 || $max_time == 0 || $total_score == 0 || $quiz_type_id == 0) {
+                if($quiz_name == "" || $subject_id == 0 || $max_time == 0 || $max_score == 0 || $quiz_type_id == 0) {
                     echo json_encode([
                         "success" => 0,
                         "data" => [
@@ -33,6 +33,7 @@
                 
                 else {
                     $datas = [];
+                    $quiz_code = "";
                     if($quiz_type_id == 1) { // private
 
                         // chech thoi gian
@@ -57,19 +58,23 @@
                             ]);
                         }
                         else {
-                            $datetime_start->format("Y-m-d H:i:s");
-                            $datetime_finish->format("Y-m-d H:i:s");
+                            $datetime_start = $datetime_start->format("Y-m-d H:i:s");
+                            $datetime_finish = $datetime_finish->format("Y-m-d H:i:s");
+                            $quiz_code = md5(uniqid($_SESSION["loginUser"]["username"].":", true));
                             // gui len db;
+                            
                             $datas = [
                                 "quiz_name" => $quiz_name,
                                 "description" => $description,
                                 "subject_id" => $subject_id,
                                 "max_time" => $max_time,
-                                "total_score" => $total_score,
+                                "max_score" => $max_score,
                                 "quiz_type_id" => $quiz_type_id,
                                 "is_random_question" => $is_random_question,
                                 "is_random_answer" => $is_random_answer,
                                 "is_redo" => $is_redo,
+                                "account_id_create" => $_SESSION["loginUser"]["account_id"],
+                                "quiz_code" => $quiz_code,
                                 "datetime_start" => $datetime_start,
                                 "datetime_finish" => $datetime_finish,
                             ];
@@ -82,14 +87,14 @@
                             "description" => $description,
                             "subject_id" => $subject_id,
                             "max_time" => $max_time,
-                            "total_score" => $total_score,
+                            "max_score" => $max_score,
                             "quiz_type_id" => $quiz_type_id,
                             "is_random_question" => $is_random_question,
                             "is_random_answer" => $is_random_answer,
                             "is_redo" => $is_redo,
+                            "account_id_create" => $_SESSION["loginUser"]["account_id"]
                         ];
                     }
-                    
                     // tao bai thi
                     $quiz_model = new quiz_model();
                     $quiz_id = $quiz_model->create($datas);
@@ -104,68 +109,147 @@
                     
                     // them cau hoi
                     else {
+                        $question_model = new question_model();
+                        $answer_model = new answer_model();
+                        foreach($_POST["xlsx_data"] as $question ) {
+                            $question_data = [
+                                "question_description" => $question["question"],
+                                "quiz_id" => $quiz_id
+                            ];
+                            $question_id = $question_model->create($question_data);
+                            $correct_answers = explode(",", $question["correct_answers"]);
+                                $keys = array_keys($question);
+                                for($i = 2; $i < count($question); $i++) {
+                                    $is_correct_answer = 0;
+                                    if(in_array((string)($i-1), $correct_answers))
+                                        $is_correct_answer = 1;
+                                    $answer_data = [
+                                        "answer_description" => $question[$keys[$i]],
+                                        "question_id"  => $question_id,
+                                        "is_correct_answer" => $is_correct_answer
+                                    ];
+                                    $answer_model->create($answer_data);
+                                }     
+                        }
                         
+                        if($quiz_type_id == 1)
+                            echo json_encode([
+                                "success" => 1,
+                                "data" => [
+                                    "message" => "Tạo bài thi thành công!",
+                                    "quiz_code" => $quiz_code
+                                ]
+                            ]);
+                        else if($quiz_type_id == 2)
+                            echo json_encode([
+                                "success" => 1,
+                                "data" => [
+                                    "message" => "Tạo bài thi thành công!"
+                                ]
+                            ]);
                     }
-
                 }
             }
         }
 
         public function start($params = null) {
             $this->checkLoggedIn();
-            if($params != null) {
-                $this->quiz_id = $params[1];
+            if(count($params) < 2 ) {
+                header("Location: ".html_helper::url([
+                    "ctl" => "home"
+                ]));
             }
-            $this->data_quiz = [
-                [
-                    "name_question" => "Lựa ch đúng nhất:",
-                    "correct_answer" => [1],
-                    "answers" => [
-                        "Toi rat la dau khi nghe bai cua son Tung",
-                        "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
-                        "Toi rat la dau khi nghe bai cua son Tung",
-                        "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
-                    ],
-                ],
-                [
-                    "name_question" => "Lựa chọn đáp án đúng nhất:",
-                    "correct_answer" => [1],
-                    "answers" => [
-                        "Toi rat la dau khi nghe bai cua son Tung",
-                        "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
-                        "Toi rat la dau khi nghe bai cua son Tung",
-                        "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
-                    ],
-                ],
-                [
-                    "name_question" => "Lựa chọn đáp án đúng nhất:",
-                    "correct_answer" => [1],
-                    "answers" => [
-                        "Toi rat la dau khi nghe bai cua son Tung",
-                        "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
-                        "Toi rat la dau khi nghe bai cua son Tung",
-                        "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
-                    ],
-                ],
-                [
-                    "name_question" => "Lựa chọn đáp án đúng nhất:",
-                    "correct_answer" => [1],
-                    "answers" => [
-                        "Toi rat la dau khi nghe bai cua son Tung",
-                        "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
-                        "Toi rat la dau khi nghe bai cua son Tung",
-                        "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
-                    ],
-                ]
-            ];
-            $this->display();
+            else {
+                $paramFirst = explode("=", $params[1]);
+                $paramSecond = explode("=", $params[2]);
+                if($paramFirst[0] != "quiz_id" || $paramSecond[0] != "current_exam")
+                    header("Location: ".html_helper::url([
+                        "ctl" => "home"
+                    ]));
+                else {
+                    if($_SESSION["loginUser"]["current_exam"] != $paramSecond[1]) {
+                        header("Location: ".html_helper::url([
+                            "ctl" => "home"
+                        ]));
+                    }
+                    else {
+                        $_SESSION["loginUser"]["current_exam"] = "";
+                        $quiz_model = new quiz_model();
+                        $questions = $quiz_model->readQA($paramFirst[1]);
+                        die(var_dump($questions));
+                        $this->display();
+                    }
+                }
+            }
+            // $this->data_quiz = [
+            //     [
+            //         "name_question" => "Lựa ch đúng nhất:",
+            //         "correct_answer" => [1],
+            //         "answers" => [
+            //             "Toi rat la dau khi nghe bai cua son Tung",
+            //             "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
+            //             "Toi rat la dau khi nghe bai cua son Tung",
+            //             "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
+            //         ],
+            //     ],
+            //     [
+            //         "name_question" => "Lựa chọn đáp án đúng nhất:",
+            //         "correct_answer" => [1],
+            //         "answers" => [
+            //             "Toi rat la dau khi nghe bai cua son Tung",
+            //             "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
+            //             "Toi rat la dau khi nghe bai cua son Tung",
+            //             "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
+            //         ],
+            //     ],
+            //     [
+            //         "name_question" => "Lựa chọn đáp án đúng nhất:",
+            //         "correct_answer" => [1],
+            //         "answers" => [
+            //             "Toi rat la dau khi nghe bai cua son Tung",
+            //             "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
+            //             "Toi rat la dau khi nghe bai cua son Tung",
+            //             "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
+            //         ],
+            //     ],
+            //     [
+            //         "name_question" => "Lựa chọn đáp án đúng nhất:",
+            //         "correct_answer" => [1],
+            //         "answers" => [
+            //             "Toi rat la dau khi nghe bai cua son Tung",
+            //             "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
+            //             "Toi rat la dau khi nghe bai cua son Tung",
+            //             "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
+            //         ],
+            //     ]
+            // ];
         }
         
         public function confirm($params = null) {
             $this->checkLoggedIn();
             if($params != null) {
-                $this->quiz_id = $params[1];
-                $this->display();
+                $paramFirst = explode("=", $params[1]);
+                if($paramFirst[0] == "quiz_id") {
+                    $this->quiz_id = $paramFirst[1];
+                    $this->current_exam = md5(uniqid($_SESSION["loginUser"]["username"].":", true));
+                    $_SESSION["loginUser"]["current_exam"] = $this->current_exam;
+                    $this->display();
+                }
+                else if($paramFirst[0] == "quiz_code") {
+                    $quiz_model = new quiz_model();
+                    $rs = $quiz_model->readByCode($paramFirst[1]);
+                    if(!$rs) {
+                        header("Location: ".html_helper::url([
+                            "ctl" => "home"
+                        ]));
+                    }
+                    else {
+                        $this->quiz_id = $rs["quiz_id"];
+                        $this->current_exam = md5(uniqid($_SESSION["loginUser"]["username"].":", true));
+                        $_SESSION["loginUser"]["current_exam"] = $this->current_exam;
+                        $this->display();
+                    }
+                }
             }
         }
     }

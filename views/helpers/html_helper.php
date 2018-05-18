@@ -20,7 +20,9 @@ class html_helper{
 					$params .= '/'.$k.'='.$v;
 				}
 			else
-				$params = implode("/", $options["params"]);
+				foreach($options['params'] as $option) {
+					$params .= '/'.$option;
+				}
 		}
 		return "/".$options['ctl'].$act.$params;
 	}

@@ -6,7 +6,7 @@ class vendor_auth_model extends vendor_main_model {
         parent::__construct();
     }
     public function login($user) {
-        $sql = "SELECT username, password, role_id, fullname FROM accounts WHERE username = :username";
+        $sql = "SELECT account_id, username, password, role_id, fullname FROM accounts WHERE username = :username";
         
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":username", $user["username"]);
