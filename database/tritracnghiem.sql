@@ -26,7 +26,7 @@ CREATE TABLE subjects (
     description TEXT(200),
     date_created DATETIME DEFAULT NOW(),
     date_edit TIMESTAMP,
-    subject_status BOOL    -- active or inactive
+    subject_status BOOL DEFAULT 1   -- active or inactive
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 INSERT INTO subjects(subject_name, description, subject_status) VALUES
@@ -104,7 +104,7 @@ CREATE TABLE quizs(
     is_redo BOOL,
     date_created DATETIME DEFAULT NOW(),
     date_edited TIMESTAMP,
-    quiz_status BOOL,
+    quiz_status BOOL DEFAULT 0,
     account_id_create INT UNSIGNED,
 
     FOREIGN KEY(quiz_type_id)

@@ -14,7 +14,7 @@ class quiz_model extends vendor_crud_model {
     }
 
     public function readByCode($quiz_code) {
-        $sql = "SELECT quiz_id  
+        $sql = "SELECT *  
                 FROM {$this->table} 
                 WHERE quiz_code = ?";
 
@@ -31,28 +31,32 @@ class quiz_model extends vendor_crud_model {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function readByID($datas) {
+        return $this->readRecord($datas);
+    }
+
     public function readQA($quiz_id) {
-        $sql = "SELECT question_description, question_id 
-                FROM questions INNER JOIN quizs ON questions.quiz_id = quizs.quiz_id 
-                WHERE quizs.quiz_id = ?";
+        $sql = "SELECT max_time, is_random_answer, is_random_question 
+                FROM quizs 
+                WHERE quiz_id = ? 
+                LIMIT 0, 1";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(1, $quiz_id);
+        $stmt->bindParam(1, $quiz_id, PDO::PARAM_INT);
         $stmt->execute();
-        $questions= $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        $quiz_data = $stmt->fetch(PDO::FETCH_ASSOC);
+       
+        $question_model = new question_model();
+        $questions = $question_model->readByQuizID($quiz_id);
+
+        $answer_model = new answer_model();
         for($i = 0; $i < count($questions); $i++) {
-            $sql = "SELECT answer_description, answer_id
-                    FROM answers INNER JOIN questions ON questions.question_id = answers.question_id 
-                    WHERE questions.question_id = {$questions[$i]["question_id"]}";
-            
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute();
-            $answers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $answers = $answer_model->readByQuestionID($questions[$i]["question_id"]);
             $questions[$i]["answers"] = $answers;
-            
         }
-        return $questions;
+        $quiz_data["questions"] = $questions;
+        return $quiz_data;
     }
 }
 

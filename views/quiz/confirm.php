@@ -6,6 +6,14 @@
     <div class="container">
         <div class="start-content box-shadow">
             <div class="text-center">
+                <?php 
+                    if(isset($this->error)) {
+                        echo "<h3>".$this->error."</h3>";
+                        include_once 'views/layout/'.$this->layout.'footer.php';
+                        die();
+                    }
+                    
+                ?>
                 <h3>Một khi đã bắt đầu, bạn không thể quay lại cho đến khi nộp bài!</h3>
                 <a href="
                     <?php 
@@ -14,7 +22,7 @@
                             "act" => "start",
                             "params" => [
                                 "quiz_id" => $this->quiz_id,
-                                "current_exam" => $this->current_exam
+                                "s" => $this->s
                             ]
                         ]); 
                 ?>" class="btn btn-danger">Xác nhận làm bài</a>

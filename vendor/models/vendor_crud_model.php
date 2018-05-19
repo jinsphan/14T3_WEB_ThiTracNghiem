@@ -22,20 +22,21 @@ class vendor_crud_model extends vendor_main_model {
 
     }
 
-    public function readRecord($fields = "*", $options = null) {
-        $conditions = "";
-        if(isset($options["conditions"])) {
-            $conditions .= " AND ".$options["conditions"];
+    public function readRecord($datas, $fields = "*") {
+        $whereDatas = [];
+        foreach($datas as $key => $value) {
+            $whereDatas[] = $key." = :".$key." ";
         }
 
-        $sql = "SELECT $fields FROM {$this->table} WHERE id = ?".$conditions;
+        // die(var_dump(implode("AND ", $whereDatas)));
+        $sql = sprintf("SELECT %s FROM %s WHERE %s",
+                $fields,
+                $this->table,
+                implode("AND ", $whereDatas));
 
         $stmt = $this->conn->prepare($sql);
 
-        $stmt->bindParam(1, $id, PDO::PARAM_INT);
-
-        $stmt->execute();
-
+        $stmt->execute($datas);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 

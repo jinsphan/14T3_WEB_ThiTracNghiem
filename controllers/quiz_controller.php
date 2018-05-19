@@ -76,7 +76,7 @@
                                 "account_id_create" => $_SESSION["loginUser"]["account_id"],
                                 "quiz_code" => $quiz_code,
                                 "datetime_start" => $datetime_start,
-                                "datetime_finish" => $datetime_finish,
+                                "datetime_finish" => $datetime_finish
                             ];
                         }
                     }
@@ -160,69 +160,45 @@
                 ]));
             }
             else {
-                $paramFirst = explode("=", $params[1]);
-                $paramSecond = explode("=", $params[2]);
-                if($paramFirst[0] != "quiz_id" || $paramSecond[0] != "current_exam")
+                $paramQuizID = explode("=", $params[1]);
+                $paramS = explode("=", $params[2]);
+                if($paramQuizID[0] != "quiz_id" || $paramS[0] != "s")
                     header("Location: ".html_helper::url([
                         "ctl" => "home"
                     ]));
                 else {
-                    if($_SESSION["loginUser"]["current_exam"] != $paramSecond[1]) {
+                    $currentExam = md5($_SESSION["loginUser"]["username"].$paramQuizID[1].$paramS[1]);
+                    if($_SESSION["loginUser"]["currentExam"] != $currentExam || !isset($_SESSION["loginUser"]["currentExam"])) {
                         header("Location: ".html_helper::url([
                             "ctl" => "home"
                         ]));
                     }
                     else {
-                        $_SESSION["loginUser"]["current_exam"] = "";
+                        unset($_SESSION["loginUser"]["currentExam"]);
+                        $exam_history_model = new exam_history_model();
                         $quiz_model = new quiz_model();
-                        $questions = $quiz_model->readQA($paramFirst[1]);
-                        die(var_dump($questions));
-                        $this->display();
+                        $history = $exam_history_model->readByQuizIDAndAcc([
+                            "quiz_id" => $paramQuizID[1],
+                            "account_id" => $_SESSION["loginUser"]["account_id"]
+                        ]);
+                        $quiz = $quiz_model->readByID(["quiz_id" => $paramQuizID[1]]);
+                        if((int)$quiz["is_redo"] == 0) {
+                            if($history != false) {
+                                $this->error = "Bạn chỉ được phép thi bài thi này 1 lần!";
+                                $this->display();
+                            }
+                        }
+                        else {
+                            $exam_history_model->create([
+                                "account_id" => $_SESSION["loginUser"]["account_id"],
+                                "quiz_id" => $paramQuizID[1]
+                            ]);
+                            $this->quiz_data = $quiz_model->readQA(vendor_app_util::sanitizeInput($paramQuizID[1]));
+                            $this->display();
+                        }
                     }
                 }
             }
-            // $this->data_quiz = [
-            //     [
-            //         "name_question" => "Lựa ch đúng nhất:",
-            //         "correct_answer" => [1],
-            //         "answers" => [
-            //             "Toi rat la dau khi nghe bai cua son Tung",
-            //             "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
-            //             "Toi rat la dau khi nghe bai cua son Tung",
-            //             "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
-            //         ],
-            //     ],
-            //     [
-            //         "name_question" => "Lựa chọn đáp án đúng nhất:",
-            //         "correct_answer" => [1],
-            //         "answers" => [
-            //             "Toi rat la dau khi nghe bai cua son Tung",
-            //             "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
-            //             "Toi rat la dau khi nghe bai cua son Tung",
-            //             "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
-            //         ],
-            //     ],
-            //     [
-            //         "name_question" => "Lựa chọn đáp án đúng nhất:",
-            //         "correct_answer" => [1],
-            //         "answers" => [
-            //             "Toi rat la dau khi nghe bai cua son Tung",
-            //             "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
-            //             "Toi rat la dau khi nghe bai cua son Tung",
-            //             "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
-            //         ],
-            //     ],
-            //     [
-            //         "name_question" => "Lựa chọn đáp án đúng nhất:",
-            //         "correct_answer" => [1],
-            //         "answers" => [
-            //             "Toi rat la dau khi nghe bai cua son Tung",
-            //             "Tìm số tự nhiên a lớn nhất biết 225 ⋮ a và 160 ⋮ a. Vậy:",
-            //             "Toi rat la dau khi nghe bai cua son Tung",
-            //             "Tìm số tự nhiên x lớn nhất biết 35 ⋮ x và 49 ⋮ x."
-            //         ],
-            //     ]
-            // ];
         }
         
         public function confirm($params = null) {
@@ -230,10 +206,19 @@
             if($params != null) {
                 $paramFirst = explode("=", $params[1]);
                 if($paramFirst[0] == "quiz_id") {
-                    $this->quiz_id = $paramFirst[1];
-                    $this->current_exam = md5(uniqid($_SESSION["loginUser"]["username"].":", true));
-                    $_SESSION["loginUser"]["current_exam"] = $this->current_exam;
-                    $this->display();
+                    $quiz_model = new quiz_model();
+                    $rs = $quiz_model->readByID(["quiz_id" => $paramFirst[1]]);
+                    if($rs["quiz_status"] == 0) {
+                        $this->error = "Bài thi này chưa được kích hoạt, vui lòng liên hệ với admin để kích hoạt bài thi!";
+                        $this->display();
+                    }
+                    else {
+                        $this->quiz_id = $paramFirst[1];
+                        $this->s = md5(uniqid("", true));
+                        $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_id.$this->s);
+                        $this->display();
+                    }
+                    
                 }
                 else if($paramFirst[0] == "quiz_code") {
                     $quiz_model = new quiz_model();
@@ -243,10 +228,14 @@
                             "ctl" => "home"
                         ]));
                     }
+                    else if($rs["quiz_status"] == 0) {
+                        $this->error = "Bài thi này chưa được kích hoạt, vui lòng liên hệ với admin để kích hoạt bài thi!";
+                        $this->display();
+                    }
                     else {
                         $this->quiz_id = $rs["quiz_id"];
-                        $this->current_exam = md5(uniqid($_SESSION["loginUser"]["username"].":", true));
-                        $_SESSION["loginUser"]["current_exam"] = $this->current_exam;
+                        $this->s = md5(uniqid("", true));
+                        $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_id.$this->s);
                         $this->display();
                     }
                 }
