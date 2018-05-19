@@ -35,5 +35,11 @@ class vendor_app_util {
 		$data = stripslashes($data);
 		return $data;
 	}
+
+	public static function print($data) {
+		echo "<pre>";
+		var_dump($data);
+		echo "</pre>";
+	}
 }
 ?>

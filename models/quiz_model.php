@@ -36,7 +36,7 @@ class quiz_model extends vendor_crud_model {
     }
 
     public function readQA($quiz_id) {
-        $sql = "SELECT max_time, is_random_answer, is_random_question 
+        $sql = "SELECT quiz_id, max_time, max_score, is_random_answer, is_random_question 
                 FROM quizs 
                 WHERE quiz_id = ? 
                 LIMIT 0, 1";
@@ -52,8 +52,10 @@ class quiz_model extends vendor_crud_model {
 
         $answer_model = new answer_model();
         for($i = 0; $i < count($questions); $i++) {
-            $answers = $answer_model->readByQuestionID($questions[$i]["question_id"]);
+            $dataReadByQuestionID = $answer_model->readByQuestionID($questions[$i]["question_id"]);
+            $answers = $dataReadByQuestionID["answers"];
             $questions[$i]["answers"] = $answers;
+            $questions[$i]["is_many_answers"] = $dataReadByQuestionID["totalCrAns"] == "1" ? false : true; 
         }
         $quiz_data["questions"] = $questions;
         return $quiz_data;

@@ -12,6 +12,7 @@
             <br>
 
             <div class="login-form-container">
+                <?php if (!isset($this->success)) { ?>
                 <form action="/register" method="POST" >
                     <div class="form-group">
                         <label for="username">Tên đăng nhập: <span class="require-form">*</span></label>
@@ -67,11 +68,34 @@
                         <a class="cl-main" href="/login">Đăng nhập</a>
                     </div>
                 </form>
+                <?php } else { ?>
+                    <div class="text-center" id="countdown"></div>
+                    <p class="text-center">Đăng kí thành công, vui lòng <a href="/login">đăng nhập</a> để tiếp tục (tự động chuyển hướng sang login sau 5s)</p>
+                <?php } ?>
             </div>
-
+            
+            
 
         </div>
     </div>
 </div>
+<script src="/media/libs/js/timercountdown.js"></script>
+<?php if (isset($this->success)) { ?>
+<script>
+    const countdown = $("#countdown").countdown360({
+        radius: 60,
+        strokeWidth: 16,
+        seconds: 5,
+        label: ['sec', 'secs'],
+        fontColor: '#FFFFFF',
+        autostart: false,
+        clockwise: true,
+        onComplete: () => {
+            window.location.href = "<?= html_helper::url(["ctl" => "login"]); ?>";
+        }
+    });
+    countdown.start();
+</script>
+<?php } ?>
 
 <?php include_once 'views/layout/'.$this->layout.'footer.php'; ?>

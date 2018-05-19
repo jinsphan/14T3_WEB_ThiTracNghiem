@@ -57,9 +57,16 @@
               <a href="javascript:void(0)">
                 <i class="fas fa-terminal"></i>
                 <div class="input-nhap-ma-code" class="input-group">
-                  <form action="">
+                  <form id="form_quiz_code" method="POST">
                     <input type="text" class="form-control" placeholder="Nhập mã bài thi">
                   </form>
+                  <script>
+                    $("#form_quiz_code").on("submit", e => {
+                      e.preventDefault();
+                      const quiz_code = $("#form_quiz_code input").val();
+                      window.location.href = `/quiz/confirm/quiz_code=${quiz_code}`;
+                    })
+                  </script>
                 </div>
               </a>
             </li>

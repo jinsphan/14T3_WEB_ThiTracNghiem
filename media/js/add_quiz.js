@@ -1,9 +1,9 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     let dataFile = [];
 
     $("#form_quiz_type input").on("click", e => {
-        const key = $(e.target).attr("key"); 
+        const key = $(e.target).attr("key");
         if (key == "1") $("#form-start-end-time-quiz").slideDown(200);
         else $("#form-start-end-time-quiz").slideUp(200);
     })
@@ -17,7 +17,7 @@ $(document).ready(function() {
 
         const max_time = $("#form_add_quiz #max_time").val();
         const max_score = $("#form_add_quiz #max_score").val();
-        const quiz_type_id  = $("#form_add_quiz #form_quiz_type input:checked").attr("key");
+        const quiz_type_id = $("#form_add_quiz #form_quiz_type input:checked").attr("key");
         const datetime_start = $("#form_add_quiz #start_time_quiz").val();
         const datetime_finish = $("#form_add_quiz #end_time_quiz").val();
         const is_random_question = $("#form_add_quiz input[name=is_random_question]").prop('checked');
@@ -50,15 +50,15 @@ $(document).ready(function() {
         })
     });
 
-    const ExcelExport= function (event) {
+    const ExcelExport = function (event) {
         var input = event.target;
         var reader = new FileReader();
-        reader.onload = function(){
+        reader.onload = function () {
             var fileData = reader.result;
-            var wb = XLSX.read(fileData, {type : 'binary'});
+            var wb = XLSX.read(fileData, { type: 'binary' });
 
-            wb.SheetNames.forEach(function(sheetName){
-                var rowObj =XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
+            wb.SheetNames.forEach(function (sheetName) {
+                var rowObj = XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
                 var jsonObj = JSON.stringify(rowObj);
                 console.log(JSON.parse(jsonObj));
                 dataFile = JSON.parse(jsonObj);

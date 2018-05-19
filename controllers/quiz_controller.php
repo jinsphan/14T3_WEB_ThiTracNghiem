@@ -160,6 +160,7 @@
                 ]));
             }
             else {
+                
                 $paramQuizID = explode("=", $params[1]);
                 $paramS = explode("=", $params[2]);
                 if($paramQuizID[0] != "quiz_id" || $paramS[0] != "s")
@@ -174,6 +175,7 @@
                         ]));
                     }
                     else {
+                        
                         unset($_SESSION["loginUser"]["currentExam"]);
                         $exam_history_model = new exam_history_model();
                         $quiz_model = new quiz_model();
@@ -182,11 +184,9 @@
                             "account_id" => $_SESSION["loginUser"]["account_id"]
                         ]);
                         $quiz = $quiz_model->readByID(["quiz_id" => $paramQuizID[1]]);
-                        if((int)$quiz["is_redo"] == 0) {
-                            if($history != false) {
-                                $this->error = "Bạn chỉ được phép thi bài thi này 1 lần!";
-                                $this->display();
-                            }
+                        if((int)$quiz["is_redo"] == 0 && $history->total_score != NULL) {
+                            $this->error = "Bạn chỉ được phép thi bài thi này 1 lần!";
+                            $this->display();
                         }
                         else {
                             $exam_history_model->create([
@@ -194,6 +194,7 @@
                                 "quiz_id" => $paramQuizID[1]
                             ]);
                             $this->quiz_data = $quiz_model->readQA(vendor_app_util::sanitizeInput($paramQuizID[1]));
+                            // vendor_app_util::print($this->quiz_data);
                             $this->display();
                         }
                     }
@@ -213,12 +214,12 @@
                         $this->display();
                     }
                     else {
+                        $this->quiz_data = $rs;
                         $this->quiz_id = $paramFirst[1];
                         $this->s = md5(uniqid("", true));
                         $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_id.$this->s);
                         $this->display();
                     }
-                    
                 }
                 else if($paramFirst[0] == "quiz_code") {
                     $quiz_model = new quiz_model();
@@ -233,6 +234,7 @@
                         $this->display();
                     }
                     else {
+                        $this->quiz_data = $rs;
                         $this->quiz_id = $rs["quiz_id"];
                         $this->s = md5(uniqid("", true));
                         $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_id.$this->s);
