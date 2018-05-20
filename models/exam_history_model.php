@@ -13,6 +13,10 @@ class exam_history_model extends vendor_crud_model {
     public function create($datas) {
         return $this->createRecord($datas);
     }
+
+    public function updateScore($exam_history_id, $datas) {
+        return $this->updateRecord($exam_history_id, $datas);
+    }
 }
 
 ?>

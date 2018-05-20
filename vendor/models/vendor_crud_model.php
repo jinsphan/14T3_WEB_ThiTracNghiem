@@ -75,7 +75,7 @@ class vendor_crud_model extends vendor_main_model {
         }
     }
 
-    public function updateRecord($id, $datas) {
+    public function updateRecord($conditions, $datas) {
         foreach($datas as $key => $value) {
             $setDatas[] = "$key = :$key";
         }
@@ -97,7 +97,7 @@ class vendor_crud_model extends vendor_main_model {
             $stmt->execute();
             return true;
         } catch(Exception $e) {
-            return false;
+            die($e->getMessage());
         }
     }
 }
