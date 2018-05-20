@@ -15,6 +15,7 @@
                         00:00
                     </div>
                     <script>
+                        let _s = "<?= $this->s ?>"
                         let max_time = "<?= $this->quiz_data["max_time"] ?>";
                         max_time = max_time.split(":");
                         max_time = {
@@ -53,7 +54,7 @@
                         <div class="anserwers-content">
                             <?php foreach($question["answers"] as $index_as => $answer) { ?>
                             <div>
-                                <input name="<?= $question["question_id"] ?>" type="radio" value="<?= $answer["answer_id"] ?>" id="<?= $index . "-". $index_as ?>"> <label for="<?= $index . "-". $index_as ?>"><?= $answer["answer_description"] ?></label>
+                                <input name="<?= $question["question_id"] ?>" type="<?= $question["is_many_answers"] === "1" ? "checkbox" : "radio" ?>" value="<?= $answer["answer_id"] ?>" id="<?= $index . "-". $index_as ?>"> <label for="<?= $index . "-". $index_as ?>"><?= $answer["answer_description"] ?></label>
                             </div>
                             <?php } ?>
                         </div>

@@ -188,7 +188,8 @@
 
                         $quiz = $quiz_model->readByID(["quiz_id" => $quiz_id]);
 
-                        if((int)$quiz["is_redo"] == 0 && $history["total_score"] != NULL) {
+                        // TODO: Need remove total_score before deploy
+                        if((int)$quiz["is_redo"] == 0 && $history["total_score"] != NULL) { 
                             $this->error = "Bạn chỉ được phép thi bài thi này 1 lần!";
                             $this->display();
                         }
@@ -197,6 +198,7 @@
                                 "account_id" => $_SESSION["loginUser"]["account_id"],
                                 "quiz_id" => $quiz_id 
                             ]);
+                            $this->s = $params["s"];
                             $this->quiz_data = $quiz_model->readQA($quiz_id);
                             $this->s = md5(uniqid("", true));
                             $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["userLogin"]["username"].$this->quiz_data["quiz_id"].$this->s);
