@@ -45,6 +45,17 @@ class answer_model extends vendor_crud_model {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)["total_correct_answers"];
     }
+
+    public function readCorrectByQuestionID($question_id) {
+        $sql = "SELECT quiz_id 
+                FROM answers 
+                WHERE question_id = ? AND is_correct_answer = 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(1, $question_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>

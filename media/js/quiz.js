@@ -16,7 +16,7 @@ $(document).ready(function() {
             s: _s,
         }
         $.ajax({
-            url: "/quiz/finish/quiz_id=123",
+            url: "/quiz/finish",
             method: "POST",
             dataType: "JSON",
             data,

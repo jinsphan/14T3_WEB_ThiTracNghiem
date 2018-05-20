@@ -194,14 +194,14 @@
                             $this->display();
                         }
                         else {
-                            $exam_history_model->create([
+                            $exam_history_id = $exam_history_model->create([
                                 "account_id" => $_SESSION["loginUser"]["account_id"],
                                 "quiz_id" => $quiz_id 
                             ]);
-                            $this->s = $params["s"];
                             $this->quiz_data = $quiz_model->readQA($quiz_id);
                             $this->s = md5(uniqid("", true));
-                            $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["userLogin"]["username"].$this->quiz_data["quiz_id"].$this->s);
+                            $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_data["quiz_id"].$this->s);
+                            $_SESSION["loginUser"]["exam_history_id"] = $exam_history_id;
                             // vendor_app_util::print($this->quiz_data);
                             $this->display();
                         }
@@ -275,7 +275,7 @@
             $this->checkLoggedIn();
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 $quiz_id = (int)vendor_app_util::sanitizeInput(isset($_POST["quiz_id"]) ? $_POST["quiz_id"] : "");
-                if($quiz_id == 0 || !isset($_POST["s"]) || !isset($_POST["results"]) || !isset($_SESSION["loginUser"]["currentExam"])) {
+                if($quiz_id == 0 || !isset($_POST["s"]) || !isset($_SESSION["loginUser"]["currentExam"])) {
                     header("Location: ".html_helper::url([
                         "ctl" => "home"
                     ]));
@@ -283,15 +283,31 @@
                 else {
 
                     // check current exam
-                    $currentExam = md5($_SESSION["userLogin"]["username"].$quiz_id.$_POST["s"]);
+                    $currentExam = md5($_SESSION["loginUser"]["username"].$quiz_id.$_POST["s"]);
                     if($currentExam != $_SESSION["loginUser"]["currentExam"]) {
                         header("Location: ".html_helper::url([
                             "ctl" => "home"
                         ]));
+                        echo("invalid current exam");
                     }
-
                     else {
-                        
+                        unset($_SESSION["loginUser"]["currentExam"]);
+
+                        $exam_history_model = new exam_history_model();
+                        $question_model = new question_model();
+                        $answer_model = new answer_model();
+
+                        $total_questions = (int)$question_model->countTotalByQuizID($quiz_id);
+                        $exam_history_id = $_SESSION["loginUser"]["exam_history_id"];
+                        unset($_SESSION["loginUser"]["exam_history_id"]);
+
+                        if(!isset($_POST["results"])) {
+                            $exam_history_model->updateScore($exam_history_id, [
+                                "total_score" => 0,
+                                "num_of_correct" => 0,
+                                "num_of_wrong" => $total_questions
+                            ]);
+                        }
                     }
                 }
             }
