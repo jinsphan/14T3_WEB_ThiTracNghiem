@@ -6,7 +6,7 @@
     <form id="form-quiz-start" quizId="<?= $this->quiz_data["quiz_id"] ?>">
         <div class="container">
             <div class="start-name-quiz text-center">
-                <h3>Toán lớp 1 - Đề kiểm tra 15 phút - Tháng 8 Miễn phí</h3>
+                <h3><?= $this->quiz_data["quiz_name"] ?></h3>
             </div>
             <div class="start-content box-shadow">
                 <div class="time-countdown">

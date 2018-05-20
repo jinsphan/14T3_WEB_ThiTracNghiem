@@ -187,7 +187,7 @@
 
                         $quiz = $quiz_model->readByID(["quiz_id" => $quiz_id]);
 
-                        if((int)$quiz["is_redo"] == 0 && $history != NULL) {
+                        if((int)$quiz["is_redo"] == 0 && $history["total_score"] != NULL) {
                             $this->error = "Bạn chỉ được phép thi bài thi này 1 lần!";
                             $this->display();
                         }
@@ -197,7 +197,7 @@
                                 "quiz_id" => $quiz_id 
                             ]);
                             $this->quiz_data = $quiz_model->readQA($quiz_id);
-                            die(var_dump($this->quiz_data));
+                            // vendor_app_util::print($this->quiz_data);
                             $this->display();
                         }
                     }
