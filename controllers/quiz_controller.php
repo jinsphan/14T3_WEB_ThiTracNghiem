@@ -15,6 +15,7 @@
                 $description = vendor_app_util::sanitizeInput(isset($_POST["description"]) ? $_POST["description"] : "");
                 $subject_id = (int)vendor_app_util::sanitizeInput(isset($_POST["subject_id"]) ? $_POST["subject_id"] : "");
                 $max_time = (int)vendor_app_util::sanitizeInput(isset($_POST["max_time"]) ? $_POST["max_time"] : "");
+                $max_time = vendor_app_util::convertToHoursMins($max_time);
                 $max_score = (int)vendor_app_util::sanitizeInput(isset($_POST["max_score"]) ? $_POST["max_score"] : "");
                 $quiz_type_id = (int)vendor_app_util::sanitizeInput(isset($_POST["quiz_type_id"]) ? $_POST["quiz_type_id"] : "");
                 $is_random_question = (int)(vendor_app_util::sanitizeInput(isset($_POST["is_random_question"]) ? $_POST["is_random_question"] : "") === "true" );
@@ -197,6 +198,8 @@
                                 "quiz_id" => $quiz_id 
                             ]);
                             $this->quiz_data = $quiz_model->readQA($quiz_id);
+                            $this->s = md5(uniqid("", true));
+                            $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["userLogin"]["username"].$this->quiz_data["quiz_id"].$this->s);
                             // vendor_app_util::print($this->quiz_data);
                             $this->display();
                         }
@@ -263,6 +266,32 @@
                 header("Location: ".html_helper::url([
                     "ctl" => "home"
                 ]));
+            }
+        }
+
+        public function finish() {
+            $this->checkLoggedIn();
+            if($_SERVER["REQUEST_METHOD"] == "POST") {
+                $quiz_id = (int)vendor_app_util::sanitizeInput(isset($_POST["quiz_id"]) ? $_POST["quiz_id"] : "");
+                if($quiz_id == 0 || !isset($_POST["s"]) || !isset($_POST["results"]) || !isset($_SESSION["loginUser"]["currentExam"])) {
+                    header("Location: ".html_helper::url([
+                        "ctl" => "home"
+                    ]));
+                }
+                else {
+
+                    // check current exam
+                    $currentExam = md5($_SESSION["userLogin"]["username"].$quiz_id.$_POST["s"]);
+                    if($currentExam != $_SESSION["loginUser"]["currentExam"]) {
+                        header("Location: ".html_helper::url([
+                            "ctl" => "home"
+                        ]));
+                    }
+
+                    else {
+                        
+                    }
+                }
             }
         }
     }

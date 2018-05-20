@@ -41,5 +41,9 @@ class vendor_app_util {
 		var_dump($data);
 		echo "</pre>";
 	}
+
+	public static function convertToHoursMins($minutes) {
+		return date("H:i", mktime(0, $minutes));
+	}
 }
 ?>
