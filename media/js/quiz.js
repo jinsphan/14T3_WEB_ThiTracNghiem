@@ -14,6 +14,7 @@ $(document).ready(function() {
                 }
             }, {}),
             s: _s,
+            time_completed,
         }
         $.ajax({
             url: "/quiz/finish",

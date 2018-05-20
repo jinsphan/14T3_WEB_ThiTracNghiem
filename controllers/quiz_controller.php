@@ -1,6 +1,19 @@
 <?php
     class quiz_controller extends main_controller {
         public function index() {
+            
+        }
+
+        public function management($params) {
+            $this->checkLoggedIn();
+
+            $numPage = $params['page'] - 1;
+            $account_id = $_SESSION["loginUser"]["account_id"];
+            $quiz_model = new quiz_model();
+            $data = $quiz_model->getQuizsByAccountId($account_id, $numPage);
+            $this->quizs_data = $data["quizs_data"];
+            $this->total_quizs = $data["total_quiz"]["total"];
+            
             $this->display();
         }
 
@@ -23,7 +36,11 @@
                 $is_redo = (int)(vendor_app_util::sanitizeInput(isset($_POST["is_redo"]) ? $_POST["is_redo"] : "") === "true" );
 
                 // check input
+<<<<<<< HEAD
                 if($quiz_name == "" || $subject_id == 0 || $max_time == "00:00" || $max_score == 0 || $quiz_type_id == 0) {
+=======
+                if($quiz_name == "" || $subject_id == 0 || $max_time == "" || $max_score == 0 || $quiz_type_id == 0) {
+>>>>>>> 1f5b26609bd3833999086b10abfd818d55e724bf
                     echo json_encode([
                         "success" => 0,
                         "data" => [

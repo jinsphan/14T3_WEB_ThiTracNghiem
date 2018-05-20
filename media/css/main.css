@@ -45,6 +45,10 @@ a {
     box-shadow: 0 0 5px grey;
 }
 
+.dropdown {
+    padding-right: 0 !important;
+}
+
 header {
     padding: 15px 0;
 }
@@ -58,7 +62,7 @@ header .login-regiser-btn > div {
     padding: 9px 40px;
 }
 
-header .login-regiser-btn > div a {
+header .login-regiser-btn .btns a {
     text-decoration: none;
     color: white;
     font-size: 16px;
@@ -77,6 +81,23 @@ header .login-regiser-btn .register-btn {
 
 header .login-regiser-btn .register-btn a {
     color: black;
+}
+
+.inner-container .inner-content{
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.inner-container .inner-content .title-inner {
+    width: 300px;
+    margin: 0 auto;
+    border-bottom: 1px solid rgb(230, 230, 230);
+}
+
+.inner-container .inner-content .title-inner h3 {
+    font-weight: bold;
+    text-align: center;
 }
 
 .menu-container {

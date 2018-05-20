@@ -13,6 +13,36 @@ class quiz_model extends vendor_crud_model {
         return $this->createRecord($datas);
     }
 
+    public function getQuizsByAccountId($account_id, $numPage = 0) {
+        $numPage = $numPage * 5;
+        $sql = "SELECT *
+                FROM {$this->table}
+                WHERE account_id_create = ?
+                LIMIT 5 OFFSET $numPage
+                ";
+        $sqlCountAllQuizs = "SELECT COUNT(quiz_id) as total FROM {$this->table}";
+
+        $stmtCount = $this->conn->prepare($sqlCountAllQuizs);
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(1, $account_id);
+
+        try {
+            $stmt->execute();
+            $stmtCount->execute();
+
+        } catch(Exception $e) {
+            $e->getMessage();
+        }
+
+        $data = [
+            "quizs_data" => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            "total_quiz" => $stmtCount->fetch(PDO::FETCH_ASSOC),
+        ];
+
+        return $data;
+    }
+
     public function readByCode($quiz_code) {
         $sql = "SELECT *  
                 FROM {$this->table} 

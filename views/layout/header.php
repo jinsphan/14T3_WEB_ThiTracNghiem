@@ -15,15 +15,23 @@
       <div class="col-md-6">
         <div class="login-regiser-btn">
           <?php if (!isset($_SESSION["loginUser"]["username"])) { ?>
-            <div class="login-btn">
+            <div class="btns login-btn">
               <a href="/login">Đăng nhập</a>
             </div>
-            <div class="register-btn">
+            <div class="btns register-btn">
               <a href="/register">Đăng kí</a>
             </div>
           <?php } else { ?>
-            <span>Xin chao admin!</span>
-            <button class="btn bg-main"><a href="/user/logout">Log out</a></button>
+            <!-- <span>Xin chao admin!</span> -->
+            <!-- <button class="btn bg-main"><a href="/user/logout">Log out</a></button> -->
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Xin chao admin!
+              <span class="caret"></span></button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li><a href="/quiz/management/page=1">Quản lí bài thi</a></li>
+                <li><a href="/user/logout">Đăng xuất</a></li>
+              </ul>
+            </div>
           <?php } ?>
         </div>
       </div>

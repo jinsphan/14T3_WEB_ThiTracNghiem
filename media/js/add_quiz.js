@@ -44,8 +44,18 @@ $(document).ready(function () {
             method: 'POST',
             data,
             dataType: "JSON",
-            success: (data) => {
-                console.log(data);
+            success: (res) => {
+                console.log(res);
+                if (res.success === 1) {
+                    $(".create_quiz_container").hide(0);
+                    $(".quiz_code_container").removeClass("hidden");
+                    if (res.data.quiz_code) {
+                        $(".quiz_code_container #quiz_code").text(res.data.quiz_code);
+                    } else {
+                        console.log("NOE QUIZ CODE");
+                        $(".quiz_code_container .quiz_code_content").hide(0);
+                    }
+                }
             },
         })
     });
