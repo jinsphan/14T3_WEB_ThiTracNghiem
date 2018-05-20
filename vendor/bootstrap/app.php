@@ -26,7 +26,10 @@ if($noPrs) {
 	if($noPrs>2) {
 		$app['prs'] = [];
 		for($i=2; $i<$noPrs; $i++) {
-			$app['prs'][$i-1] = $prs[$i];
+			if(!isset(explode("=", $prs[$i])[1]))
+				$app['prs'][$i-1] = $prs[$i];
+			else
+				$app['prs'][explode("=", $prs[$i])[0]] = explode("=", $prs[$i])[1];
 		}
 	}
 }

@@ -160,41 +160,44 @@
                 ]));
             }
             else {
-                
-                $paramQuizID = explode("=", $params[1]);
-                $paramS = explode("=", $params[2]);
-                if($paramQuizID[0] != "quiz_id" || $paramS[0] != "s")
+                if(!isset($params["quiz_id"]) || !isset($params["s"]))
                     header("Location: ".html_helper::url([
                         "ctl" => "home"
                     ]));
                 else {
-                    $currentExam = md5($_SESSION["loginUser"]["username"].$paramQuizID[1].$paramS[1]);
+
+                    $quiz_id = vendor_app_util::sanitizeInput($params["quiz_id"]);
+
+                    $currentExam = md5($_SESSION["loginUser"]["username"].$quiz_id.$params["s"]);
                     if($_SESSION["loginUser"]["currentExam"] != $currentExam || !isset($_SESSION["loginUser"]["currentExam"])) {
                         header("Location: ".html_helper::url([
                             "ctl" => "home"
                         ]));
                     }
                     else {
-                        
                         unset($_SESSION["loginUser"]["currentExam"]);
+
                         $exam_history_model = new exam_history_model();
                         $quiz_model = new quiz_model();
+
                         $history = $exam_history_model->readByQuizIDAndAcc([
-                            "quiz_id" => $paramQuizID[1],
+                            "quiz_id" => $quiz_id ,
                             "account_id" => $_SESSION["loginUser"]["account_id"]
                         ]);
-                        $quiz = $quiz_model->readByID(["quiz_id" => $paramQuizID[1]]);
-                        if((int)$quiz["is_redo"] == 0 && $history->total_score != NULL) {
+
+                        $quiz = $quiz_model->readByID(["quiz_id" => $quiz_id]);
+
+                        if((int)$quiz["is_redo"] == 0 && $history != NULL) {
                             $this->error = "Bạn chỉ được phép thi bài thi này 1 lần!";
                             $this->display();
                         }
                         else {
                             $exam_history_model->create([
                                 "account_id" => $_SESSION["loginUser"]["account_id"],
-                                "quiz_id" => $paramQuizID[1]
+                                "quiz_id" => $quiz_id 
                             ]);
-                            $this->quiz_data = $quiz_model->readQA(vendor_app_util::sanitizeInput($paramQuizID[1]));
-                            // vendor_app_util::print($this->quiz_data);
+                            $this->quiz_data = $quiz_model->readQA($quiz_id);
+                            die(var_dump($this->quiz_data));
                             $this->display();
                         }
                     }
@@ -204,26 +207,35 @@
         
         public function confirm($params = null) {
             $this->checkLoggedIn();
-            if($params != null) {
-                $paramFirst = explode("=", $params[1]);
-                if($paramFirst[0] == "quiz_id") {
+            if($params != null && count($params) == 1) {
+                if(isset($params["quiz_id"])) {
                     $quiz_model = new quiz_model();
-                    $rs = $quiz_model->readByID(["quiz_id" => $paramFirst[1]]);
-                    if($rs["quiz_status"] == 0) {
+                    $this->quiz_id = vendor_app_util::sanitizeInput($params["quiz_id"]);
+                    $rs = $quiz_model->readByID(["quiz_id" => $this->quiz_id]);
+                    if($rs == null) {
+                        header("Location: ".html_helper::url([
+                            "ctl" => "home"
+                        ]));
+                    }
+                    else if($rs["quiz_status"] == 0) {
                         $this->error = "Bài thi này chưa được kích hoạt, vui lòng liên hệ với admin để kích hoạt bài thi!";
                         $this->display();
                     }
                     else {
                         $this->quiz_data = $rs;
-                        $this->quiz_id = $paramFirst[1];
                         $this->s = md5(uniqid("", true));
                         $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_id.$this->s);
                         $this->display();
                     }
                 }
-                else if($paramFirst[0] == "quiz_code") {
+
+                if(isset($params["quiz_code"])) {
                     $quiz_model = new quiz_model();
-                    $rs = $quiz_model->readByCode($paramFirst[1]);
+
+                    $quiz_code = vendor_app_util::sanitizeInput($params["quiz_code"]);
+
+                    $rs = $quiz_model->readByCode($quiz_code);
+
                     if(!$rs) {
                         header("Location: ".html_helper::url([
                             "ctl" => "home"
@@ -241,6 +253,16 @@
                         $this->display();
                     }
                 }
+                else {
+                    header("Location: ".html_helper::url([
+                        "ctl" => "home"
+                    ]));
+                }
+            }
+            else {
+                header("Location: ".html_helper::url([
+                    "ctl" => "home"
+                ]));
             }
         }
     }

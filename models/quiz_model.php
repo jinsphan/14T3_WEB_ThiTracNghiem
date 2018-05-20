@@ -36,7 +36,7 @@ class quiz_model extends vendor_crud_model {
     }
 
     public function readQA($quiz_id) {
-        $sql = "SELECT quiz_id, max_time, max_score, is_random_answer, is_random_question 
+        $sql = "SELECT quiz_id, max_time, is_random_answer, is_random_question 
                 FROM quizs 
                 WHERE quiz_id = ? 
                 LIMIT 0, 1";
@@ -46,17 +46,35 @@ class quiz_model extends vendor_crud_model {
         $stmt->execute();
 
         $quiz_data = $stmt->fetch(PDO::FETCH_ASSOC);
-       
+
+        $is_random_answer = (int)$quiz_data["is_random_answer"];
+        $is_random_quesion = (int)$quiz_data["is_random_question"];
+
+        unset($quiz_data["is_random_answer"]);
+        unset($quiz_data["is_random_question"]);
+
         $question_model = new question_model();
         $questions = $question_model->readByQuizID($quiz_id);
 
         $answer_model = new answer_model();
-        for($i = 0; $i < count($questions); $i++) {
-            $dataReadByQuestionID = $answer_model->readByQuestionID($questions[$i]["question_id"]);
-            $answers = $dataReadByQuestionID["answers"];
-            $questions[$i]["answers"] = $answers;
-            $questions[$i]["is_many_answers"] = $dataReadByQuestionID["totalCrAns"] == "1" ? false : true; 
+
+        if($is_random_answer != 1) {
+            for($i = 0; $i < count($questions); $i++) {
+                $questions[$i]["is_many_answers"] = ((int)$answer_model->countCorrectByQuestionID($questions[$i]["question_id"]) > 1 ? "1" : "0");
+                $questions[$i]["answers"] = $answer_model->readByQuestionID($questions[$i]["question_id"]);
+            }
         }
+        
+        else {
+            for($i = 0; $i < count($questions); $i++) {
+                $questions[$i]["is_many_answers"] = ((int)$answer_model->countCorrectByQuestionID($questions[$i]["question_id"]) > 1 ? "1" : "0");
+                $questions[$i]["answers"] = $answer_model->readByQuestionID($questions[$i]["question_id"]);
+                shuffle($questions[$i]["answers"]);
+            }
+        }
+
+        if($is_random_quesion == 1)
+            shuffle($questions);
         $quiz_data["questions"] = $questions;
         return $quiz_data;
     }
