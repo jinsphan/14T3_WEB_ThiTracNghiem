@@ -2,19 +2,28 @@ $(document).ready(function() {
     
     const nopBai = (quiz_id, result) => {
         clearInterval(interval_countdown);
-        const data = {
+        let data = {
             quiz_id,
             results: result.reduce((cur, next) => {
-                return [
+                return {
                     ...cur,
-                    {
-                        question_id: next.name,
-                        answers: [next.value]
+                    [next.name]: {
+                        question_id: next.name, 
+                        answers: [...(cur[next.name] ? cur[next.name].answers : []), next.value]
                     }
-                ]
-            }, [])
+                }
+            }, {}),
+            s: _s,
         }
-        console.log(data);
+        $.ajax({
+            url: "/quiz/finish/quiz_id=123",
+            method: "POST",
+            dataType: "JSON",
+            data,
+            success: res => {
+                console.log(res);
+            }
+        })
     }
     
     
