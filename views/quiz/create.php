@@ -102,7 +102,7 @@
             <br>
             <div class="quiz_code_content text-center">
                 <h5>QUIZ'S CODE:</h5>
-                <h2 id="quiz_code" class="text-success">ASDFASDFNASDKFNASKDFAS54</h2>
+                <h2 id="quiz_code" class="text-success"></h2>
                 <span class="text-danger">Chỉ ai có quiz code này mới có quyền tham gia bài thi</span>
             </div>
         </div>
