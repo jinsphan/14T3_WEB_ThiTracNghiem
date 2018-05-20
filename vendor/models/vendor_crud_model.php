@@ -77,13 +77,17 @@ class vendor_crud_model extends vendor_main_model {
 
     public function updateRecord($conditions, $datas) {
         foreach($datas as $key => $value) {
-            $setDatas[] = "$key = :$key";
+            $setDatas[] = "$key = :$key ";
+        }
+
+        foreach($conditions as $key => $value) {
+            $whereDatas[] = "$key = :$key ";
         }
 
         $sql = sprintf("UPDATE %s SET %s WHERE %s",
                 $this->table,
                 implode(", ", $setDatas),
-                "id = :id");
+                implode("AND ", $whereDatas));
         
 
         $stmt = $this->conn->prepare($sql);
@@ -91,7 +95,10 @@ class vendor_crud_model extends vendor_main_model {
         foreach($datas as $key => &$value) {
             $stmt->bindParam(":".$key, $value);
         }
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+
+        foreach($conditions as $key => &$value) {
+            $stmt->bindParam(":".$key, $value);
+        }
 
         try {
             $stmt->execute();

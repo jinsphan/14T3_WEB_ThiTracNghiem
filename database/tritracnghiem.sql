@@ -140,8 +140,8 @@ CREATE TABLE exam_histories(
     quiz_id INT UNSIGNED,
     total_score FLOAT,
     time_complete TIME,
-    num_of_correct INT UNSIGNED,
-    num_of_wrong INT UNSIGNED,
+    num_of_correct FLOAT,
+    num_of_wrong FLOAT,
     date_created DATETIME DEFAULT NOW()
 );
 

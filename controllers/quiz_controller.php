@@ -23,7 +23,7 @@
                 $is_redo = (int)(vendor_app_util::sanitizeInput(isset($_POST["is_redo"]) ? $_POST["is_redo"] : "") === "true" );
 
                 // check input
-                if($quiz_name == "" || $subject_id == 0 || $max_time == 0 || $max_score == 0 || $quiz_type_id == 0) {
+                if($quiz_name == "" || $subject_id == 0 || $max_time == "00:00" || $max_score == 0 || $quiz_type_id == 0) {
                     echo json_encode([
                         "success" => 0,
                         "data" => [
@@ -202,7 +202,6 @@
                             $this->s = md5(uniqid("", true));
                             $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_data["quiz_id"].$this->s);
                             $_SESSION["loginUser"]["exam_history_id"] = $exam_history_id;
-                            // vendor_app_util::print($this->quiz_data);
                             $this->display();
                         }
                     }
@@ -296,17 +295,58 @@
                         $exam_history_model = new exam_history_model();
                         $question_model = new question_model();
                         $answer_model = new answer_model();
+                        $quiz_model = new quiz_model();
 
                         $total_questions = (int)$question_model->countTotalByQuizID($quiz_id);
                         $exam_history_id = $_SESSION["loginUser"]["exam_history_id"];
                         unset($_SESSION["loginUser"]["exam_history_id"]);
 
                         if(!isset($_POST["results"])) {
-                            $exam_history_model->updateScore($exam_history_id, [
-                                "total_score" => 0,
-                                "num_of_correct" => 0,
-                                "num_of_wrong" => $total_questions
-                            ]);
+                            
+                            // khong chon dap an
+                            $exam_history_model->updateScore(
+                                [
+                                    "exam_history_id" => $exam_history_id
+                                ],
+
+                                [
+                                    "total_score" => 0,
+                                    "num_of_correct" => 0,
+                                    "num_of_wrong" => $total_questions
+                                ]
+                            );
+                        }
+
+                        else {
+
+                            $quiz_data = $quiz_model->readByID(["quiz_id" => $quiz_id]);
+                            $scorePerQuestion = (float)((int)$quiz_data["max_score"] / $total_questions);
+                            $total_score = 0;
+                            $num_of_correct = 0;
+                            foreach($_POST["results"] as $question) {
+                                $correctAnswers = $answer_model->readCorrectByQuestionID($question["question_id"]);
+                                for($i = 0; $i < count($correctAnswers); $i++) {
+                                    $correctAnswers[$i] = $correctAnswers[$i]["answer_id"];
+                                }
+                                $scorePerAnswer = (float)($scorePerQuestion / count($correctAnswers)); 
+                                foreach($question["answers"] as $key => $value) {
+                                    if(in_array($value, $correctAnswers)) {
+                                        $total_score += $scorePerAnswer;
+                                        $num_of_correct += (float)(1 / count($correctAnswers));
+                                    }
+                                }
+                            }
+
+                            $exam_history_model->updateScore(
+                                [
+                                    "exam_history_id" => $exam_history_id 
+                                ],
+                                [
+                                    "total_score" => $total_score,
+                                    "num_of_correct" => $num_of_correct,
+                                    "num_of_wrong" => (float)($total_questions - $num_of_correct)
+                                ]
+                            );
                         }
                     }
                 }

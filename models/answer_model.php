@@ -12,7 +12,7 @@ class answer_model extends vendor_crud_model {
 
     public function readByQuestionID($question_id) {
         $sql = "SELECT answer_description, answer_id
-                    FROM answers INNER JOIN questions ON questions.question_id = answers.question_id 
+                    FROM {$this->table} INNER JOIN questions ON questions.question_id = answers.question_id 
                     WHERE questions.question_id = ?";
             
         // $sqlCountCorrectAnserwers = "SELECT COUNT(is_correct_answer) as total
@@ -36,7 +36,7 @@ class answer_model extends vendor_crud_model {
     public function countCorrectByQuestionID($question_id) {
 
         $sql = "SELECT COUNT(answer_id) as total_correct_answers 
-                FROM answers 
+                FROM {$this->table} 
                 WHERE question_id = ? AND is_correct_answer = 1
                 LIMIT 0, 1";
 
@@ -47,8 +47,8 @@ class answer_model extends vendor_crud_model {
     }
 
     public function readCorrectByQuestionID($question_id) {
-        $sql = "SELECT quiz_id 
-                FROM answers 
+        $sql = "SELECT answer_id 
+                FROM {$this->table} 
                 WHERE question_id = ? AND is_correct_answer = 1";
 
         $stmt = $this->conn->prepare($sql);
