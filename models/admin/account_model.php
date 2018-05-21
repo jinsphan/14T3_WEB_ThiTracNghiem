@@ -6,14 +6,27 @@ class account_model extends vendor_crud_model
 		parent::__construct();
 	}
 
-	public function addNewUser($data)
+	public function create($datas)
 	{
-		return $this->createRecord($data);
+		return $this->createRecord($datas);
 	}
 
-	public function getNameAdmin()
-	{
-		return $_SESSION['loginUser']["fullname"];
+	public function readByID($datas) {
+		return $this->readRecord($datas);
 	}
+
+	public function readAll() {
+		return $this->readAllRecords();
+	}
+
+	public function updateByID($conditions, $datas) {
+		return $this->updateRecord($conditions, $datas);
+	}
+
+	public function del($conditions) {
+		return $this->delRecord($conditions);
+	}
+
+	
 }
 ?>

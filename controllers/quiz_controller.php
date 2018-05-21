@@ -328,6 +328,10 @@
                                     "num_of_wrong" => $total_questions
                                 ]
                             );
+
+                            $this->total_score = 0;
+                            $this->num_of_correct = 0;
+                            $this->num_of_wrong = $total_questions;
                         }
 
                         else {
@@ -360,6 +364,12 @@
                                     "num_of_wrong" => (float)($total_questions - $num_of_correct)
                                 ]
                             );
+                            
+                            $this->total_score = 0;
+                            $this->num_of_correct = 0;
+                            $this->num_of_wrong = $total_questions;
+
+                            // $this->display();
                         }
                     }
                 }

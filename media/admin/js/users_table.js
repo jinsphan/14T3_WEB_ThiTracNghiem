@@ -103,7 +103,7 @@ $(document).ready(function () {
 		}
 
 		function delUser(id) {
-			urlDele = "?pr=admin/users/del/"+ id;
+			urlDele = "?pr=admin/account/del/"+ id;
 			$.ajax({
 				url: urlDele,
 				success: function (data) {
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 		function clickBtnPaginate(numBtn) {
 
-			var urlLoadData = "?pr=admin/users/ajax_loadData/"+numBtn + "/" + strFil;
+			var urlLoadData = "?pr=admin/account/ajax_loadData/"+numBtn + "/" + strFil;
 			$.ajax({
 				url: urlLoadData,
 				dataType: "json",
@@ -181,7 +181,7 @@ $(document).ready(function () {
 
 				var typeAct = this.id.substring(0,4);
 				var idAct = this.id.substring(4, this.id.length);
-				var urlGetData = "?pr=admin/users/view/"+ idAct+"/";
+				var urlGetData = "?pr=admin/account/view/"+ idAct+"/";
 
 				$('#myModal #modal-title').text(typeAct.toUpperCase() +' User');
 								
@@ -233,7 +233,7 @@ $(document).ready(function () {
 									$('.modal-footer #submit-btn-done').off('click').on('click', function () {
 										var dataEdited = get_modal();
 
-										var urlEdited = "?pr=admin/users/edit/"+ idAct+"/";
+										var urlEdited = "?pr=admin/account/edit/"+ idAct+"/";
 
 										$.ajax({
 											url: urlEdited,
@@ -300,7 +300,7 @@ $(document).ready(function () {
 
 				$('.modal-footer #submit-btn-add').off('click').on('click', function () {
 					var dataAddnew = get_modal();
-					var urlAddnew = "?pr=admin/users/add/";
+					var urlAddnew = "?pr=admin/account/create/";
 					$.ajax({
 						url: urlAddnew,
 						type: "POST",
@@ -323,7 +323,7 @@ $(document).ready(function () {
 				var isChecked = $(this).children().prop('checked');
 				if(idCheckBox == 'All'){
 					if(isChecked){
-						var urlGetAllId = "?pr=admin/users/getAllId/" + strFil;
+						var urlGetAllId = "?pr=admin/account/getAllId/" + strFil;
 						$.ajax({
 							url: urlGetAllId,
 							dataType: 'json',

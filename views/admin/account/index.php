@@ -78,9 +78,8 @@
 			    								<input type="checkbox" name="">
 			    							</th>
 			    							<th style="width: 50px;">Username</th>
-			    							<th style="width: 100px;">Email</th>
 			    							<th style="width: 50px;">Status</th>
-			    							<th style="width: 50px;">Date Create</th>
+			    							<th style="width: 50px;">Date Created</th>
 			    							<th style="width: 50px;">Action</th>
 			    						</tr>
 			    					</thead>
@@ -90,43 +89,34 @@
 
 			    						<?php foreach ($this->rowTop10 as $key => $value) { ?>
 			    						<tr role="row">
-			                  <td id="<?php echo("checkbox".$value['id']);?>" class="checkboxUser">
+			                  <td id="<?php echo("checkbox".$value['account_id']);?>" class="checkboxUser">
 			                  	<input type="checkbox" name="">
 			                  </td>
-			                  <td id="<?php echo("username".$value['id']);?>">
+			                  <td id="<?php echo("username".$value['account_id']);?>">
 			                  	<?php echo $value['username']; ?>		
 			                  </td>
-			                  <td id="<?php echo("email".$value['id']);?>">
-			                  	<?php echo $value['email']; ?>
-			                  </td>
-			                  <td id="<?php echo("status".$value['id']);?>">
+			                  <td id="<?php echo("account_status".$value['account_id']);?>">
 			                  	<?php 
-			                  	switch ($value['status']) {
+			                  	switch ($value['account_status']) {
 			                  		case '0':
 			                  			echo "Disable";
 			                  			break;
-			                  		case '2':
-			                  			echo "Enable";
-			                  			break;
 			                  		case '1':
-			                  			echo "Creating";
-			                  			break;
-			                  		default:
-			                  			echo "Unknown";
+			                  			echo "Enable";
 			                  			break;
 			                  	} 
 			                  ?></td>
-			                  <td id="<?php echo("created".$value['id']);?>">
-			                  	<?php echo $value['created']; ?>
+			                  <td id="<?php echo("date_created".$value['account_id']);?>">
+			                  	<?php echo $value['date_created']; ?>
 			                  </td>
 			                  <td  class="btn-act" class="pull-right">
-			                  	<button id="<?php echo("view".$value['id']);?>" type="button" class="btn btn-success view-user" data-toggle="modal" data-target="#myModal">
+			                  	<button id="<?php echo("view".$value['account_id']);?>" type="button" class="btn btn-success view-user" data-toggle="modal" data-target="#myModal">
 			                  		<i class="fa fa-search-plus" aria-hidden="true"></i>
 			                  	</button>
-			                  	<button id="<?php echo("edit".$value['id']);?>" type="button" class="btn btn-primary edit-user" data-toggle="modal" data-target="#myModal">
+			                  	<button id="<?php echo("edit".$value['account_id']);?>" type="button" class="btn btn-primary edit-user" data-toggle="modal" data-target="#myModal">
 			                  		<i class="fa fa-pencil"></i>
 			                  	</button>
-			                  	<button id="<?php echo("dele".$value['id']);?>" type="button" class="btn btn-danger dele-user">
+			                  	<button id="<?php echo("dele".$value['account_id']);?>" type="button" class="btn btn-danger dele-user">
 			                  		<i class="fa fa-trash-o"></i>
 			                  	</button>
 			                  </td>

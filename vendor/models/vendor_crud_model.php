@@ -40,22 +40,23 @@ class vendor_crud_model extends vendor_main_model {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function delRecord($id = null, $conditions = null) {
-        if($conditions)
-            $conditions = " AND ".$conditions;
+    public function delRecord($conditions = null) {
+        $whereDatas = [];
+        foreach($conditions as $key => $value) {
+            $whereDatas[] = $key." = :".$key." ";
+        }
         
-        $sql = "DELETE FROM ".$this->table.
-                " WHERE id = ?".$conditions;
+        $sql = sprintf("DELETE FROM %s WHERE %s",
+                $this->table,
+                implode("AND ", $whereDatas));
         
         $stmt = $this->conn->prepare($sql);
 
-        $stmt->bindParam(1, $id, PDO::PARAM_INT);
-
         try {
-            $stmt->execute();
-            return true;
+            $stmt->execute($conditions);
+            return $stmt->rowCount();
         } catch(Exception $e) {
-            return false;
+            return 0;
         }
     }
 
