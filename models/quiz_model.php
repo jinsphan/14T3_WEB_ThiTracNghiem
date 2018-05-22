@@ -133,7 +133,7 @@ class quiz_model extends vendor_crud_model {
     
     public function readBySubjectID($subject_id) {
         $sql = "SELECT * FROM {$this->table} 
-                WHERE subject_id = ?";
+                WHERE subject_id = ? AND quiz_type_id = 2";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(1, $subject_id, PDO::PARAM_INT); 

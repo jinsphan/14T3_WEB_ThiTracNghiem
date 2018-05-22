@@ -25,11 +25,11 @@ define('DB_USER','root');
 // TODO: BEFORE PUSH
 // Keep this
 
-// define('DB_PASSWORD','1234');
+define('DB_PASSWORD','1234');
 // define('DB_NAME','thitracnghiem');
 
 // // Remove this
-define('DB_PASSWORD','root');
+// define('DB_PASSWORD','root');
 define('DB_NAME','thitracnghiem');
 //--------------------
 
