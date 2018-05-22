@@ -17,6 +17,17 @@ class exam_history_model extends vendor_crud_model {
     public function updateScore($exam_history_id, $datas) {
         return $this->updateRecord($exam_history_id, $datas);
     }
+
+    public function readAllByQuizAndAcc($account_id, $quiz_id) {
+        $sql = "SELECT * FROM {$this->table} WHERE account_id = ? AND quiz_id = ?";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(1, $account_id, PDO::PARAM_INT);
+        $stmt->bindParam(2, $quiz_id, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>
