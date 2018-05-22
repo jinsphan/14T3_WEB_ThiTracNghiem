@@ -108,6 +108,10 @@ class quiz_model extends vendor_crud_model {
         $quiz_data["questions"] = $questions;
         return $quiz_data;
     }
+
+    public function update($conditions, $datas) {
+        return $this->updateRecord($conditions, $datas);
+    }
 }
 
 ?>

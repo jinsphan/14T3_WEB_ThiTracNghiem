@@ -56,6 +56,10 @@ class answer_model extends vendor_crud_model {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function delByQuestionID($conditions) {
+        return $this->delRecord($conditions);
+    }
 }
 
 ?>
