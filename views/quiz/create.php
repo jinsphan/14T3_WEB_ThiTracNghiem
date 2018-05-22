@@ -27,10 +27,13 @@
                     <div class="form-group">
                         <label for="subject_id">Thuộc môn:</label>
                         <select class="form-control" id="subject_id" required>
-                            <option value="1">Toán</option>
+                            <?php foreach($_SESSION["subjects"] as $key => $subject) {?>
+                                <option value="<?= $subject["subject_id"] ?>"><?= $subject["subject_name"] ?></option>
+                            <?php } ?>    
+                        <!-- <option value="1">Toán</option>
                             <option value="2">Lí </option>
                             <option value="3">Hóa</option>
-                            <option value="4">Anh văn</option>
+                            <option value="4">Anh văn</option> -->
                         </select>
                     </div>
 

@@ -25,7 +25,7 @@
             <!-- <span>Xin chao admin!</span> -->
             <!-- <button class="btn bg-main"><a href="/user/logout">Log out</a></button> -->
             <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Xin chao admin!
+              <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Xin chao <?= $_SESSION["loginUser"]["fullname"] ?>!
               <span class="caret"></span></button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li><a href="/quiz/management/page=1">Quản lí bài thi</a></li>
