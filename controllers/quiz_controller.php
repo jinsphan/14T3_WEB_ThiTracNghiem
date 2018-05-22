@@ -269,14 +269,8 @@
                         
                         // Get history exam
                         $exam_history_model = new exam_history_model();
-                        $this->history = $exam_history_model->readByQuizIDAndAcc([
-                            "quiz_id" => $this->quiz_id,
-                            "account_id" => $_SESSION["loginUser"]["account_id"]
-                        ]);
+                        $this->history = $exam_history_model->readAllByQuizAndAcc($_SESSION["loginUser"]["account_id"], $this->quiz_id);
                         
-                        $this->history = [$this->history];
-                        var_dump($this->history);
-
                         $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_id.$this->s);
                         $this->display();
                     }

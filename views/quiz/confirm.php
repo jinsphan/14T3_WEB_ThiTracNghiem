@@ -40,9 +40,28 @@
                 </div>
                 <div class="col-md-6"> 
                     <h4><Html>Lịch sử thi</Html></h4>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Stt</th>
+                            <th>Số câu đúng</th>
+                            <th>Số câu sai</th>
+                            <th>Tổng điểm</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($this->history as $key => $item) {  ?>
+                            <tr>
+                                <td><?= $key + 1 ?></td>
+                                <td><?= $item["num_of_correct"] ?></td>
+                                <td><?= $item["num_of_wrong"] ?></td>
+                                <td><?= round($item["total_score"], 3) ?></td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            
         </div>  
     </div>
 </div>
