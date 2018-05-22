@@ -165,7 +165,7 @@ header .login-regiser-btn .register-btn a {
     display: none;
     position: absolute;
     left: 0;
-    top: 105%;
+    top: 101%;
     background-color: #ec5c51;
     padding: 15px;
     border-radius: 15px;
@@ -174,18 +174,21 @@ header .login-regiser-btn .register-btn a {
 }
 
 .menu-container .menu-dropdown li {
-    display: block;
-    width: 150px;
+    display: inline-block;
+    /* width: 400px; */
     background-color: #d23327;
     border-radius: 15px;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px;
     padding-left: 10px;
+    padding-right: 15px; */
+    margin: 5px 15px
 }
 
 .menu-container .menu-dropdown li a {
     display: inline-block;
     line-height: 30px;
     width: 100%;
+    padding: 0 15px;
 }
 
 .menu-container .menu-dropdown li:hover {

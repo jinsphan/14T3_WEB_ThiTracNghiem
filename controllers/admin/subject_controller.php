@@ -7,6 +7,13 @@ class subject_controller extends vendor_backend_controller {
         parent::__construct();
     }
 
+    public function index() {
+        // $subject_model = new subject_model();
+        // $this->allSubjects = $this->readAll();
+        // var_dump($this->allSubjects);
+        $this->display();
+    }
+
     public function create() {
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $subject_name = vendor_app_util::sanitizeInput((isset($_POST["subject_name"]) ? $_POST["subject_name"] : ""));
@@ -79,7 +86,7 @@ class subject_controller extends vendor_backend_controller {
             $subject = $subject_model->readByID([
                 "subject_id" => $subject_id
             ]);
-            die(var_dump($subject));
+            echo json_encode($subject);
         }
     }
 
@@ -90,7 +97,7 @@ class subject_controller extends vendor_backend_controller {
         $subject_data = [];
 
         // find root subject
-        $allSubjects = $subject_model->readAll("subject_id, subject_name, description");
+        $allSubjects = $subject_model->readAll("*");
         foreach($allSubjects as $subject) {
             if($subject_rela_model->findParentSubject([
                 "child_subject_id" => $subject["subject_id"]

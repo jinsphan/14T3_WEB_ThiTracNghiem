@@ -631,7 +631,8 @@
             $quizs_data = $quiz_model->readAll("*", [
                 "conditions" => " quiz_type_id = 2 ORDER BY date_created"
             ]);
-            echo json_encode($quizs_data);
+            return $quizs_data;
+            // echo json_encode($quizs_data);
         }
 
         public function search($params) {
@@ -648,7 +649,9 @@
                 $subject_id = (int)vendor_app_util::sanitizeInput($params["subject_id"]);
                 $quiz_model = new quiz_model();
                 $quizs_data = $quiz_model->readBySubjectID($params["subject_id"]);
+        
                 echo json_encode($quizs_data);
+                // return $quizs_data;
             }
         }
     }

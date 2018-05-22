@@ -7,6 +7,17 @@ class subject_controller extends main_controller {
         parent::__construct();
     }
 
+    public function show($params) {
+        if (!isset($params["subject-id"]) || $params["subject-id"] == "") {
+            header("Location: ".html_helper::url([
+                "ctl" => "home"
+            ]));
+        }
+        $quiz_model = new quiz_model();
+        $this->data = $quiz_model->readBySubjectID($params["subject-id"]);
+        $this->display();
+    }
+
     public function readAll() {
         $subject_model = new subject_model();
         $subject_rela_model = new subject_relationship_model();

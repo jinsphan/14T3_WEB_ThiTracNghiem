@@ -46,11 +46,9 @@
                 Môn <i class="fas fa-sort-down"></i>
               </a>
               <ul class="menu-dropdown">
-                <li><a href="">Toan</a></li>
-                <li><a href="">Li</a></li>
-                <li><a href="">Hoa</a></li>
-                <li><a href="">Anh van</a></li>
-                <li><a href="">Mtp</a></li>
+                <?php foreach($_SESSION["subjects"] as $key => $subject){ ?>
+                  <li><a href="/subject/show/subject-id=<?= $subject["subject_id"] ?>"><?= $subject["subject_name"] ?></a></li>
+                <?php } ?>
               </ul>
             </li>
 
