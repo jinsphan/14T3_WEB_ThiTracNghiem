@@ -32,6 +32,14 @@ class question_model extends vendor_crud_model {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)["total_questions"];
     }
+
+    public function update($conditions, $datas) {
+        return $this->updateRecord($conditions, $datas);
+    }
+
+    public function del($conditions) {
+        return $this->delRecord($conditions);
+    }
 }
 
 ?>

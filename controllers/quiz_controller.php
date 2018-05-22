@@ -1,7 +1,13 @@
 <?php
     class quiz_controller extends main_controller {
+
+        public function __construct()
+        {
+            parent::__construct();
+        }
+
         public function index() {
-            
+
         }
 
         public function management($params) {
@@ -422,6 +428,227 @@
                         }
                     }
                 }
+            }
+        }
+
+        public function history() {
+            $this->checkLoggedIn();
+            $exam_history_model = new exam_history_model();
+            $this->histories = $exam_history_model->readAllByAcc("*", [
+                "conditions" => "account_id = {$_SESSION["loginUser"]["account_id"]}"
+            ]);
+            die(var_dump($this->histories));
+            $this->display();
+        }
+
+        public function update() {
+            $this->checkLoggedIn();
+            if($_SERVER["REQUEST_METHOD"] == "POST") {
+                $quiz_id = (int)vendor_app_util::sanitizeInput(isset($_POST["quiz_id"]) ? $_POST["quiz_id"] : "");
+                $quiz_name = vendor_app_util::sanitizeInput(isset($_POST["quiz_name"]) ? $_POST["quiz_name"] : "");
+                $description = vendor_app_util::sanitizeInput(isset($_POST["description"]) ? $_POST["description"] : "");
+                $subject_id = (int)vendor_app_util::sanitizeInput(isset($_POST["subject_id"]) ? $_POST["subject_id"] : "");
+                $max_time = (int)vendor_app_util::sanitizeInput(isset($_POST["max_time"]) ? $_POST["max_time"] : "");
+                $max_time = vendor_app_util::convertToHoursMins($max_time);
+                $max_score = (int)vendor_app_util::sanitizeInput(isset($_POST["max_score"]) ? $_POST["max_score"] : "");
+                $quiz_type_id = (int)vendor_app_util::sanitizeInput(isset($_POST["quiz_type_id"]) ? $_POST["quiz_type_id"] : "");
+                $is_random_question = (int)(vendor_app_util::sanitizeInput(isset($_POST["is_random_question"]) ? $_POST["is_random_question"] : "") === "true" );
+                $is_random_answer = (int)(vendor_app_util::sanitizeInput(isset($_POST["is_random_answer"]) ? $_POST["is_random_answer"] : "") === "true" );
+                $is_redo = (int)(vendor_app_util::sanitizeInput(isset($_POST["is_redo"]) ? $_POST["is_redo"] : "") === "true" );
+
+                // check input
+                if($quiz_id == 0 || $quiz_name == "" || $subject_id == 0 || $max_time == "00:00" || $max_score == 0 || $quiz_type_id == 0) {
+                    echo json_encode([
+                        "success" => 0,
+                        "data" => [
+                            "message" => "Thông tin nhập không chính xác!"
+                        ]
+                    ]);
+                    return;
+                }
+                
+                else {
+                    $datas = [];
+                    $quiz_code = "";
+                    if($quiz_type_id == 1) { // private
+
+                        // chech thoi gian
+                        $datetime_start = DateTime::createFromFormat("Y-m-d\TH:i", vendor_app_util::sanitizeInput(isset($_POST["datetime_start"]) ? $_POST["datetime_start"] : ""));
+                        $datetime_finish = DateTime::createFromFormat("Y-m-d\TH:i", vendor_app_util::sanitizeInput(isset($_POST["datetime_finish"]) ? $_POST["datetime_finish"] : ""));
+                        
+                        if($datetime_start === false || $datetime_finish === false) {
+                            echo json_encode([
+                                "success" => 0,
+                                "data" => [
+                                    "message" => "Thời gian nhập không chính xác!"
+                                ]
+                            ]);
+                        }
+
+                        else if($datetime_start >= $datetime_finish) {
+                            echo json_encode([
+                                "success" => 0,
+                                "data" => [
+                                    "message" => "Thời gian nhập không chính xác!"
+                                ]
+                            ]);
+                        }
+                        else {
+                            $datetime_start = $datetime_start->format("Y-m-d H:i:s");
+                            $datetime_finish = $datetime_finish->format("Y-m-d H:i:s");
+                            $quiz_code = md5(uniqid($_SESSION["loginUser"]["username"].":", true));
+                            // gui len db;
+                            
+                            $datas = [
+                                "quiz_name" => $quiz_name,
+                                "description" => $description,
+                                "subject_id" => $subject_id,
+                                "max_time" => $max_time,
+                                "max_score" => $max_score,
+                                "quiz_type_id" => $quiz_type_id,
+                                "is_random_question" => $is_random_question,
+                                "is_random_answer" => $is_random_answer,
+                                "is_redo" => $is_redo,
+                                "account_id_create" => $_SESSION["loginUser"]["account_id"],
+                                "quiz_code" => $quiz_code,
+                                "datetime_start" => $datetime_start,
+                                "datetime_finish" => $datetime_finish
+                            ];
+                        }
+                    }
+
+                    else if($quiz_type_id == 2){  // public
+                        $datas = [
+                            "quiz_name" => $quiz_name,
+                            "description" => $description,
+                            "subject_id" => $subject_id,
+                            "max_time" => $max_time,
+                            "max_score" => $max_score,
+                            "quiz_type_id" => $quiz_type_id,
+                            "is_random_question" => $is_random_question,
+                            "is_random_answer" => $is_random_answer,
+                            "is_redo" => $is_redo,
+                            "account_id_create" => $_SESSION["loginUser"]["account_id"],
+                            "datetime_start" => NULL,
+                            "datetime_finish" => NULL
+                        ];
+                    }
+                    // tao bai thi
+                    $quiz_model = new quiz_model();
+                    $quiz_id = $quiz_model->update(["quiz_id" => $quiz_id], $datas);
+                    if(!$quiz_id) {
+                        echo json_encode([
+                            "success" => 0,
+                            "data" => [
+                                "message" => "cập nhật bài thi thất bại, vui lòng thử lại"
+                            ]
+                        ]);
+                    }
+                    
+                    // them cau hoi
+                    else {
+                        if(isset($_POST["xlsx_data"])) {
+                            $question_model = new question_model();
+                            $answer_model = new answer_model();
+
+                            // del old questions and answer
+                            $old_questions = $question_model->readByQuizID($quiz_id);
+
+                            foreach($old_questions as $old_question) {
+                                $answer_model->delByQuestionID([
+                                    "question_id" => $old_question["question_id"]
+                                ]);
+                                $question_model->del([
+                                    "question_id" => $old_question["question_id"]
+                                ]);
+                            }
+
+                            // add new questions and answer
+
+                            foreach($_POST["xlsx_data"] as $question ) {
+                                $question_data = [
+                                    "question_description" => $question["question"],
+                                    "quiz_id" => $quiz_id
+                                ];
+                                $question_id = $question_model->create($question_data);
+                                $correct_answers = explode(",", $question["correct_answers"]);
+                                    $keys = array_keys($question);
+                                    for($i = 2; $i < count($question); $i++) {
+                                        $is_correct_answer = 0;
+                                        if(in_array((string)($i-1), $correct_answers))
+                                            $is_correct_answer = 1;
+                                        $answer_data = [
+                                            "answer_description" => $question[$keys[$i]],
+                                            "question_id"  => $question_id,
+                                            "is_correct_answer" => $is_correct_answer
+                                        ];
+                                        $answer_model->create($answer_data);
+                                    }     
+                            }
+                            
+                            if($quiz_type_id == 1)
+                                echo json_encode([
+                                    "success" => 1,
+                                    "data" => [
+                                        "message" => "Cập nhật bài thi thành công!",
+                                        "quiz_code" => $quiz_code
+                                    ]
+                                ]);
+                            else if($quiz_type_id == 2) {
+                                echo json_encode([
+                                    "success" => 1,
+                                    "data" => [
+                                        "message" => "Cập nhật bài thi thành công!"
+                                    ]
+                                ]);
+                            }
+                        } 
+                        else {
+                            if($quiz_type_id == 1)
+                                echo json_encode([
+                                    "success" => 1,
+                                    "data" => [
+                                        "message" => "Cập nhật bài thi thành công!",
+                                        "quiz_code" => $quiz_code
+                                    ]
+                                ]);
+                            else if($quiz_type_id == 2) {
+                                echo json_encode([
+                                    "success" => 1,
+                                    "data" => [
+                                        "message" => "Cập nhật bài thi thành công!"
+                                    ]
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public function readAll() {
+            $quiz_model = new quiz_model();
+            $quizs_data = $quiz_model->readAll("*", [
+                "conditions" => " quiz_type_id = 2 ORDER BY date_created"
+            ]);
+            echo json_encode($quizs_data);
+        }
+
+        public function search($params) {
+            if($params != null && isset($params["keyword"])) {
+                $keyword = vendor_app_util::sanitizeInput($params["keyword"]);
+                $quiz_model = new quiz_model();
+                $quizs_data = $quiz_model->search($keyword);
+                die(var_dump($quizs_data));
+            }
+        }
+
+        public function readBySubjectID($params) {
+            if($params != null && isset($params) && is_numeric($params["subject_id"])) {
+                $subject_id = (int)vendor_app_util::sanitizeInput($params["subject_id"]);
+                $quiz_model = new quiz_model();
+                $quizs_data = $quiz_model->readBySubjectID($params["subject_id"]);
+                echo json_encode($quizs_data);
             }
         }
     }

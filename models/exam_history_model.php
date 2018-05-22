@@ -28,6 +28,10 @@ class exam_history_model extends vendor_crud_model {
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function readAllByAcc($fields, $options) {
+        return $this->readAllRecords($fields, $options);
+    }
 }
 
 ?>
