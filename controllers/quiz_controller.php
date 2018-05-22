@@ -288,19 +288,24 @@
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 $quiz_id = (int)vendor_app_util::sanitizeInput(isset($_POST["quiz_id"]) ? $_POST["quiz_id"] : "");
                 if($quiz_id == 0 || !isset($_POST["s"]) || !isset($_SESSION["loginUser"]["currentExam"])) {
-                    header("Location: ".html_helper::url([
-                        "ctl" => "home"
-                    ]));
+                    $response = [
+                        "success" => 0,
+                        "message" => "May be you are a crazy hacker!"
+                    ];
+                    echo json_encode($response);
+                    return;
                 }
                 else {
 
                     // check current exam
                     $currentExam = md5($_SESSION["loginUser"]["username"].$quiz_id.$_POST["s"]);
                     if($currentExam != $_SESSION["loginUser"]["currentExam"]) {
-                        header("Location: ".html_helper::url([
-                            "ctl" => "home"
-                        ]));
-                        echo("invalid current exam");
+                        $response = [
+                            "success" => 0,
+                            "message" => "invalid current exam"
+                        ];
+                        echo json_encode($response);
+                        return;
                     }
                     else {
                         unset($_SESSION["loginUser"]["currentExam"]);
@@ -317,21 +322,38 @@
                         if(!isset($_POST["results"])) {
                             
                             // khong chon dap an
-                            $exam_history_model->updateScore(
+                            $dataNoResults = [
+                                "total_score" => 0,
+                                "num_of_correct" => 0,
+                                "num_of_wrong" => $total_questions
+                            ];
+
+                            $resultUpdate = $exam_history_model->updateScore(
                                 [
                                     "exam_history_id" => $exam_history_id
                                 ],
-
-                                [
-                                    "total_score" => 0,
-                                    "num_of_correct" => 0,
-                                    "num_of_wrong" => $total_questions
-                                ]
+                                $dataNoResults
                             );
+                            
+                            if ($resultUpdate) {
+                                $response = [
+                                    "success" => 1,
+                                    "message" => "Update score successful",
+                                    "data" => $dataNoResults
+                                ];
+                                echo json_encode($response);
+                                return;
+                            } else {
+                                $response = [
+                                    "success" => 0,
+                                    "message" => "Error, cant update to database",
+                                ];
+                                echo json_encode($response);
+                                return;
+                            }
                         }
 
                         else {
-
                             $quiz_data = $quiz_model->readByID(["quiz_id" => $quiz_id]);
                             $scorePerQuestion = (float)((int)$quiz_data["max_score"] / $total_questions);
                             $total_score = 0;
@@ -350,16 +372,38 @@
                                 }
                             }
 
-                            $exam_history_model->updateScore(
+                            $dataResults = [
+                                "total_score" => $total_score,
+                                "num_of_correct" => $num_of_correct,
+                                "num_of_wrong" => (float)($total_questions - $num_of_correct)
+                            ];
+                            
+                            $resultUpdate = $exam_history_model->updateScore(
                                 [
                                     "exam_history_id" => $exam_history_id 
                                 ],
-                                [
-                                    "total_score" => $total_score,
-                                    "num_of_correct" => $num_of_correct,
-                                    "num_of_wrong" => (float)($total_questions - $num_of_correct)
-                                ]
+                                $dataResults
                             );
+
+                            if ($resultUpdate) {
+                                $response = [
+                                    "success" => 1,
+                                    "message" => "Update score successful",
+                                    "data" => [
+                                        "exam_history_id" => $exam_history_id ,
+                                        $dataResults,
+                                    ]
+                                ];
+                                echo json_encode($response);
+                                return;
+                            } else {
+                                $response = [
+                                    "success" => 0,
+                                    "message" => "Error, cant update to database",
+                                ];
+                                echo json_encode($response);
+                                return;
+                            }
                         }
                     }
                 }

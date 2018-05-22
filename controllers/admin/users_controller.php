@@ -4,16 +4,16 @@ class users_controller extends vendor_backend_controller {
 	private $dataLoad = array();
 	
 	public function index() {
-		$users = new user_model();
-		$rsAll = $this->getAllData();
-		$this->numAllUsers = count($rsAll);
+		// $users = new user_model();
+		// $rsAll = $this->getAllData();
+		// $this->numAllUsers = count($rsAll);
 		
-		$this->fullname = $users->getNameAdmin();
+		// $this->fullname = $users->getNameAdmin();
 
-		$this->rowTop10 = array();
-		for($id = 0; $id < NUM_TOP_USERS; $id++){
-			$this->rowTop10[$id] = $rsAll[$id];
-		}
+		// $this->rowTop10 = array();
+		// for($id = 0; $id < NUM_TOP_USERS; $id++){
+		// 	$this->rowTop10[$id] = $rsAll[$id];
+		// }
 
 		$this->display();
 	}
