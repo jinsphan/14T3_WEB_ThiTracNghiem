@@ -8,7 +8,8 @@
             <div class="start-name-quiz text-center">
                 <h3><?= $this->quiz_data["quiz_name"] ?></h3>
             </div>
-            <div class="start-content box-shadow">
+            <?php if (!isset($this->error)) { ?>
+            <div id="tesst_quiz_content" class="start-content box-shadow">
                 <div class="time-countdown">
                     <div class="title bg-main">Thời gian còn lai</div>
                     <div id="time-countdown" class="time">
@@ -72,6 +73,19 @@
                 <div class="btn-submit">
                     <button id="btn-submit-quiz" class="btn-v2">Nộp bài</button>
                 </div>
+            </div>
+            <?php } else { ?>
+                <div class="start-content box-shadow">
+                    <h1 class="text-center text-danger"><?= $this->error ?></h1>
+                </div>
+            <?php } ?>
+            
+            <div id="result_quiz_content" class="start-content box-shadow text-center hidden">
+                <h1 class="text-center text-success">Chúc mừng bạn đã hoàn thành bài thi</h1>
+                <h3 class="text-center text-primary">Kết quả:</h3>
+                <h4>Số câu đúng: <span id="num_correct_answers" class="text-success"></span></h4>
+                <h4>Số câu sai: <span id="num_wrong_answers" class="text-danger"></span></h4>
+                <h4>Tổng điểm: <strong id="total_score"></strong></h4>
             </div>
         </div>
     </form>

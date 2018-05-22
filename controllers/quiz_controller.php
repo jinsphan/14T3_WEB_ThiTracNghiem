@@ -225,7 +225,7 @@
         public function confirm($params = null) {
             $this->checkLoggedIn();
             if($params != null && count($params) == 1) {
-                if(isset($params["quiz_id"])) {
+                if(isset($params["quiz_id"]) && is_numeric($params["quiz_id"])) {
                     $quiz_model = new quiz_model();
                     $this->quiz_id = vendor_app_util::sanitizeInput($params["quiz_id"]);
                     $rs = $quiz_model->readByID(["quiz_id" => $this->quiz_id]);
@@ -266,6 +266,17 @@
                         $this->quiz_data = $rs;
                         $this->quiz_id = $rs["quiz_id"];
                         $this->s = md5(uniqid("", true));
+                        
+                        // Get history exam
+                        $exam_history_model = new exam_history_model();
+                        $this->history = $exam_history_model->readByQuizIDAndAcc([
+                            "quiz_id" => $this->quiz_id,
+                            "account_id" => $_SESSION["loginUser"]["account_id"]
+                        ]);
+                        
+                        $this->history = [$this->history];
+                        var_dump($this->history);
+
                         $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_id.$this->s);
                         $this->display();
                     }
