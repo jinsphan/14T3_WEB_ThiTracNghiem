@@ -77,10 +77,10 @@
 			    							<th id="checkboxAll" class="checkboxUser" style="width: 10px;">
 			    								<input type="checkbox" name="">
 			    							</th>
-			    							<th style="width: 50px;">Username</th>
-			    							<th style="width: 50px;">Status</th>
-			    							<th style="width: 50px;">Date Created</th>
-			    							<th style="width: 50px;">Action</th>
+			    							<th>Username</th>
+			    							<th>Status</th>
+			    							<th>Date Created</th>
+			    							<th>Action</th>
 			    						</tr>
 			    					</thead>
 			    					<tbody id="tbody-users">
@@ -130,7 +130,6 @@
 		                	<tr>
 		                		<th rowspan="1" colspan="1"><i class="fa fa-check-square-o" aria-hidden="true"></i></th>
 		                		<th rowspan="1" colspan="1">Username</th>
-		                		<th rowspan="1" colspan="1">Email</th>
 		                		<th rowspan="1" colspan="1">Status</th>
 		                		<th rowspan="1" colspan="1">Date created</th>
 		                		<th rowspan="1" colspan="1">Action</th>
@@ -195,31 +194,19 @@
 				    <tbody id="modal-body">
 				      <tr id="username-modal" class="row">
 				        <td class="col-sm-4">Username</td>
-				        <td class="col-sm-8">Jr</td>
+				        <td class="col-sm-8"></td>
 				      </tr>
-				     	<tr id="email-modal" class="row">
-				        <td class="col-sm-4">Email</td>
-				        <td class="col-sm-8">Value</td>
+				     	<tr id="fullname-modal" class="row">
+				        <td class="col-sm-4">Fullname</td>
+				        <td class="col-sm-8"></td>
 				      </tr>
-				      <tr id="avata-modal" class="row">
-				        <td class="col-sm-4">Avata</td>
-				        <td class="col-sm-8">Value</td>
+							<tr id="sex-modal" class="row">
+				        <td class="col-sm-4">Sex</td>
+				        <td class="col-sm-8"></td>
 				      </tr>
-				      <tr id="firstname-modal" class="row">
-				        <td class="col-sm-4">First name</td>
-				        <td class="col-sm-8">Value</td>
-				      </tr>
-				      <tr id="lastname-modal" class="row">
-				        <td class="col-sm-4">Last name</td>
-				        <td class="col-sm-8">Value</td>
-				      </tr>
-				      <tr id="phone-modal" class="row">
-				        <td class="col-sm-4">Phone number</td>
-				        <td class="col-sm-8">Value</td>
-				      </tr>
-				      <tr id="address-modal" class="row">
-				        <td class="col-sm-4">Address</td>
-				        <td class="col-sm-8">Value</td>
+							<tr id="birthday-modal" class="row">
+				        <td class="col-sm-4">Day of birth</td>
+				        <td class="col-sm-8"></td>
 				      </tr>
 				      <tr id="role-modal" class="row">
 				        <td class="col-sm-4">Role</td>
@@ -238,7 +225,6 @@
         </div>
         <div class="modal-footer">
           <button id="submit-btn-view" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button id="submit-btn-add" type="button" class="btn btn-default" data-dismiss="modal">Add New</button>
           <button id="submit-btn-done" type="button" class="btn btn-default" data-dismiss="modal">Done</button>
         </div>
       </div>
