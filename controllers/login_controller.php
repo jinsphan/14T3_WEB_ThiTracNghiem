@@ -25,13 +25,13 @@
                     ]));
                 }
                 else {
-                    $user = [
+                    $account = [
                         "username" => vendor_app_util::sanitizeInput($_POST["username"]),
                         "password" => vendor_app_util::sanitizeInput($_POST["password"])
                     ];
                     
                     $auth = new vendor_auth_model();
-                    if($auth->login($user)) {
+                    if($auth->login($account)) {
                         header("Location: ".html_helper::url([
                             "ctl" => "home"
                         ]));

@@ -5,22 +5,43 @@ class login_controller extends vendor_main_controller {
 		global $app;
 		$rolesFlip = array_flip($app['roles']);
 		if (isset($_SESSION['loginUser']['role']) && $_SESSION['loginUser']['role']==$rolesFlip["admin"]) {
-			header( "Location: ".vendor_app_util::url(array('ctl'=>'dashboard')));
+			header("Location: ".vendor_app_util::url(array('ctl'=>'dashboard')));
 		}
 	}
 
 	public function index() {
-		if(isset($_POST['btn_submit'])) {
+		if($_SERVER["REQUEST_METHOD"] == "GET") {
+			if(isset($_SESSION["loginUser"]["username"])) {
+				header("Location: ".vendor_app_util::url([
+					"ctl" => "dashboard"
+				]));
+			}
+			else $this->display();
+		}
 
-			$user = $_POST['user'];
-			$auth = new vendor_auth_model();
-			if($auth->login($user)) {
-				header( "Location: ".vendor_app_util::url(array('ctl'=>'dashboard', 'params'=> [1,2,3])));
-			} else {
-				header( "Location: ".vendor_app_util::url(array('ctl'=>'login')));
+		if($_SERVER["REQUEST_METHOD"] == "POST") {
+			$username = vendor_app_util::sanitizeInput((isset($_POST["username"]) ? $_POST["username"] : ""));
+			$password = vendor_app_util::sanitizeInput((isset($_POST["password"]) ? $_POST["password"] : ""));
+			if($username == "" || $password == "") {
+				$this->error = "Vui lòng nhập đầy đủ thông tin";
+				$this->display();
+			}
+			else {
+				$account = [
+					"username" => $username,
+					"password" => $password
+				];
+
+				$auth = new vendor_auth_model();
+				if($auth->loginAdmin($account)) {
+					header( "Location: ".vendor_app_util::url(array('ctl'=>'dashboard', 'params'=> [1,2,3])));
+				}
+				else {
+					$this->error = "Tài khoản hoặc mật khẩu không chính xác!";
+                    $this->display();
+				}
 			}
 		}
-		$this->display();
 	}
 	public function logout() {
 		// remove all session variables
