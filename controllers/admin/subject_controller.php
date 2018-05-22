@@ -103,7 +103,7 @@ class subject_controller extends vendor_backend_controller {
             $this->findChildSubject($root_subject["subject_id"], $subject_data["{$root_subject["subject_id"]}"]["childs"]);
         }
         
-        die(var_dump($subject_data));
+        echo json_encode($subject_data);
     }
 
     private function findChildSubject($parent_subject_id, &$subject_data){
