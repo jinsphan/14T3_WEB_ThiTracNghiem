@@ -119,7 +119,7 @@ class quiz_model extends vendor_crud_model {
 
     public function search($keyword) {
         $sql = "SELECT * FROM {$this->table} 
-                WHERE quiz_name LIKE ? OR description LIKE ?";
+                WHERE ( quiz_name LIKE ? OR description LIKE ? ) AND quiz_type_id = 2";
         
         $stmt = $this->conn->prepare($sql);
         $keyword = "%{$keyword}%";
