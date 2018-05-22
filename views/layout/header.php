@@ -82,7 +82,7 @@
       </div>
       <div class="col-md-4 text-right">
         <div class="search-container">
-          <div class="input-group">
+          <div id="form_search_quizs" class="input-group">
             <input type="text" class="form-control" placeholder="Search">
             <div class="input-group-btn">
               <button class="btn btn-default" type="submit">
@@ -95,3 +95,4 @@
     </div>
   </div>
 </header>
+<script src="/media/js/search.js"></script>
