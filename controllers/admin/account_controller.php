@@ -22,7 +22,7 @@ class account_controller extends vendor_backend_controller {
 			for($id = 0; $id < NUM_TOP_USERS; $id++){
 				$this->rowTop10[$id] = $rs[$id];
 			}
-
+		
 		$this->display();
 	}
 
@@ -161,14 +161,14 @@ class account_controller extends vendor_backend_controller {
 		if($_SERVER["REQUEST_METHOD"] == "POST") {
 			$account_id = (int)vendor_app_util::sanitizeInput((isset($_POST["account_id"]) ? $_POST["account_id"] : ""));
 			$username = vendor_app_util::sanitizeInput((isset($_POST["username"]) ? $_POST["username"] : ""));
-			$password = vendor_app_util::sanitizeInput((isset($_POST["password"]) ? $_POST["password"] : ""));
+			// $password = vendor_app_util::sanitizeInput((isset($_POST["password"]) ? $_POST["password"] : ""));
 			$fullname = vendor_app_util::sanitizeInput((isset($_POST["fullname"]) ? $_POST["fullname"] : ""));
 			$sex = vendor_app_util::sanitizeInput((isset($_POST["sex"]) ? $_POST["sex"] : ""));
 			$date_of_birth = date("Y:m:d", strtotime(vendor_app_util::sanitizeInput($_POST["date_of_birth"])));
 			$role_id = (int)vendor_app_util::sanitizeInput((isset($_POST["role_id"]) ? $_POST["role_id"] : ""));
 			$account_status = (int)vendor_app_util::sanitizeInput((isset($_POST["account_status"]) ? $_POST["account_status"] : ""));
 
-			if( $account_id == 0 || $username == "" || $password == "" || $fullname == "" || $sex == "" || $date_of_birth == "" || $role_id == 0) {
+			if( $account_id == 0 || $username == "" || $fullname == "" || $sex == "" || $date_of_birth == "" || $role_id == 0) {
 				echo json_encode([
 					"success" => 0,
 					"data" => [
@@ -184,7 +184,6 @@ class account_controller extends vendor_backend_controller {
 					],
 					[
 						"username" => $username,
-						"password" => vendor_app_util::generatePassword($password),
 						"fullname" => $fullname,
 						"sex" => $sex,
 						"date_of_birth" => $date_of_birth,

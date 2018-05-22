@@ -322,7 +322,7 @@
         </li>
         <!-- <li class="treeview"> -->
         <li>
-          <a href="<?php echo vendor_app_util::url(array('ctl'=>'users')); ?>">
+          <a href="<?php echo vendor_app_util::url(array('ctl'=>'account')); ?>">
             <i class="fa fa-users" aria-hidden="true"></i>
             <span>Users</span>
             <span class="pull-right-container">

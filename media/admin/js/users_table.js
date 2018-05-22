@@ -10,24 +10,18 @@ $(document).ready(function () {
 
 		function fill_modal(data) {
 			$('#username-modal td').eq(1).html(data.username);
-			$('#email-modal td').eq(1).html(data.email);
-			$('#avata-modal td').eq(1).html(data.avata);
-			$('#firstname-modal td').eq(1).html(data.firstname);
-			$('#lastname-modal td').eq(1).html(data.lastname);
-			$('#phone-modal td').eq(1).html(data.phone);
-			$('#address-modal td').eq(1).html(data.address);
+			$('#fullname-modal td').eq(1).html(data.fullname);
+			$('#sex-modal td').eq(1).html(data.sex);
+			$('#birthday-modal td').eq(1).html(data.date_of_birth);
 			$('#role-modal td').eq(1).html(data.role);
 			$('#status-modal td').eq(1).html(data.status);
-			$('#created-modal td').eq(1).html(data.created);
+			$('#created-modal td').eq(1).html(data.date_created);
 		}
 
 		function fill_row(id,data) {
 			$('#tbody-users #username'+id).text(data.username);
-			$('#tbody-users #email'+id).text(data.email);
-			data.role = data.role=="1"?"admin":"user"
-			data.status = data.status=="0"?"disable":(data.status=="1"?"Creating":"Enable")
-			$('#tbody-users #status'+id).text(data.status);
-			$('#tbody-users #created'+id).text(data.created);	
+			$('#tbody-users #account_status'+id).text(data.account_status == "0" ? "Disable" : "Enable");
+			$('#tbody-users #date_created'+id).text(data.date_created);
 		}
 
 		function upload_table(data) {
@@ -41,21 +35,20 @@ $(document).ready(function () {
 							<input type='checkbox' name='' "+ isChecked +">\
 						</td>\
 						<td id='username"+ data[i].id +"'>"+ data[i].username +"</td>\
-						<td id='email"+ data[i].id +"'>"+ data[i].email +"</td>\
-						<td id='status"+ data[i].id +"'>"+ data[i].status +"</td>\
-						<td id='created"+ data[i].id +"'>"+ data[i].created +"</td>\
+						<td id='account_status"+ data[i].id +"'>"+ `${data[i].account_status == 1 ? "Enable" : "Disable"}` +"</td>\
+						<td id='date_created"+ data[i].id +"'>"+ data[i].date_created +"</td>\
 						<td  class='btn-act' class='pull-right'>\
-            	<button id='view"+ data[i].id + "' type='button' class='btn btn-success view-user' data-toggle='modal' data-target='#myModal'>\
-            		<i class='fa fa-search-plus' aria-hidden='true'></i>\
-            	</button>\
-            	<button id='edit"+ data[i].id + "' type='button' class='btn btn-primary edit-user' data-toggle='modal' data-target='#myModal'>\
-            		<i class='fa fa-pencil'></i>\
-            	</button>\
-            	<button id='dele" + data[i].id + "' type='button' class='btn btn-danger dele-user'>\
-            		<i class='fa fa-trash-o'></i>\
-            	</button>\
-            </td>\
-          </tr>\
+							<button id='view"+ data[i].id + "' type='button' class='btn btn-success view-user' data-toggle='modal' data-target='#myModal'>\
+								<i class='fa fa-search-plus' aria-hidden='true'></i>\
+							</button>\
+							<button id='edit"+ data[i].id + "' type='button' class='btn btn-primary edit-user' data-toggle='modal' data-target='#myModal'>\
+								<i class='fa fa-pencil'></i>\
+							</button>\
+							<button id='dele" + data[i].id + "' type='button' class='btn btn-danger dele-user'>\
+								<i class='fa fa-trash-o'></i>\
+							</button>\
+           				</td>\
+          			</tr>\
 				";
 			}
 
@@ -65,15 +58,12 @@ $(document).ready(function () {
 		function get_modal() {
 			var data = {
 				'username': $('#modal-body #username-modal input').val(),
-				'email': $('#modal-body #email-modal input').val(),
-				'avata': $('#modal-body #avata-modal input').val(),
-				'firstname': $('#modal-body #firstname-modal input').val(),
-				'lastname': $('#modal-body #lastname-modal input').val(),
-				'phone': $('#modal-body #phone-modal input').val(),
-				'address': $('#modal-body #address-modal input').val(),
-				'role': $('#modal-body #role-modal select').val(),
-				'status': $('#modal-body #status-modal select').val(),
-			}	
+				'fullname': $('#modal-body #fullname-modal input').val(),
+				'sex': $('#modal-body #sex-modal input').val(),
+				'day_of_birth': $('#modal-body #birthday-modal input').val(),
+				'role_id': $('#modal-body #role-modal select').val(),
+				'account_status': $('#modal-body #status-modal select').val(),
+			}
 			return data;
 		}
 
@@ -103,16 +93,22 @@ $(document).ready(function () {
 		}
 
 		function delUser(id) {
-			urlDele = "?pr=admin/account/del/"+ id;
+			urlDele = "?pr=admin/account/delete/account_id="+ id;
 			$.ajax({
 				url: urlDele,
+				dataType: "JSON",
 				success: function (data) {
-					if(data != 'error'){
-						numAllUser--;
-						numBtnActive = parseInt($('#table_paginate .active a').attr('data-dt-idx'));
-						load_btnPaginate();
-						clickBtnPaginate(numBtnActive > numAllBtn?numAllBtn:numBtnActive);
+					console.log(data);
+					if(data.success){
+						location.reload();
+						// numAllUser--;
+						// numBtnActive = parseInt($('#table_paginate .active a').attr('data-dt-idx'));
+						// load_btnPaginate();
+						// clickBtnPaginate(numBtnActive > numAllBtn?numAllBtn:numBtnActive);
 					}
+				},
+				error: function(er) {
+					console.log(er);
 				}
 			})
 		}
@@ -127,7 +123,6 @@ $(document).ready(function () {
 					if(data){
 						upload_table(data[0]);
 						numAllUser = data[1];
-						// console.log(data[0]);
 					}
 				}
 			}).done(function () {
@@ -149,8 +144,6 @@ $(document).ready(function () {
 				var showEnd = showStart + 5;
 				if(showEnd > numAllUser ) showEnd = numAllUser;
 				$('#table_info').text('Showing '+ showStart +' to '+ showEnd +' of '+ numAllUser +' entries');
-
-
 			});
 		}
 
@@ -181,37 +174,34 @@ $(document).ready(function () {
 
 				var typeAct = this.id.substring(0,4);
 				var idAct = this.id.substring(4, this.id.length);
-				var urlGetData = "?pr=admin/account/view/"+ idAct+"/";
+				var urlGetData = "?pr=admin/account/read/account_id="+ idAct;
 
 				$('#myModal #modal-title').text(typeAct.toUpperCase() +' User');
-								
 				$.ajax({
 					url: urlGetData,
 					dataType: "json",
 					success: function (data) {
 						if(data){
-							
 							switch(typeAct){
 								case 'view': {
-									data.role = data.role=="1"?"admin":"user";
-									data.status = data.status=="0"?"disable":(data.status=="1"?"Creating":"Enable");
+									data.role = data.role_id=="1"?"admin":"user";
+									data.status = data.account_status == "0"?"disable": "Enable";
 									$('.modal-footer button').hide(0);
 									$('.modal-footer #submit-btn-view').show(0);
 									break;
 								}
 								case 'edit': {
 									data.username = "<input class='form-control' type='text' value='"+data.username+"'/>";
-									data.email = "<input class='form-control' type='text' value='"+data.email+"'/>";
-									data.avata = "<input class='form-control' type='text' value='"+data.avata+"'/>";
-									data.firstname = "<input class='form-control' type='text' value='"+data.firstname+"'/>";
-									data.lastname = "<input class='form-control' type='text' value='"+data.lastname+"'/>";
+									data.fullname = "<input class='form-control' type='text' value='"+data.fullname+"'/>";
+									data.sex = "<input class='form-control' type='text' value='"+data.sex+"'/>";
+									data.date_of_birth = "<input class='form-control' type='text' value='"+data.date_of_birth+"'/>";
 									data.phone = "<input class='form-control' type='text' value='"+data.phone+"'/>";
 									data.address = "<input class='form-control' type='text' value='"+data.address+"'/>";
 
 									data.role = "\
 										<div class='form-group'>\
 										  <select class='form-control' id='sel1'>\
-										    <option>"+data.role+"</option>\
+										    <option>"+data.role_id+"</option>\
 										    <option>1</option>\
 										    <option>2</option>\
 										  </select>\
@@ -220,10 +210,9 @@ $(document).ready(function () {
 									data.status = "\
 										<div class='form-group'>\
 										  <select class='form-control' id='sel1'>\
-										  	<option>"+data.status+"</option>\
+										  	<option>"+data.account_status+"</option>\
 										  	<option>0</option>\
 										    <option>1</option>\
-										    <option>2</option>\
 										  </select>\
 										</div>\
 									";
@@ -232,18 +221,22 @@ $(document).ready(function () {
 
 									$('.modal-footer #submit-btn-done').off('click').on('click', function () {
 										var dataEdited = get_modal();
-
-										var urlEdited = "?pr=admin/account/edit/"+ idAct+"/";
+										dataEdited.account_id = idAct;
+										var urlEdited = "?pr=admin/account/update";
 
 										$.ajax({
 											url: urlEdited,
-											data: dataEdited,
 											type: 'POST',
+											data: dataEdited,
+											dataType: "JSON",
 											success: function (data) {
-												if(data){
-													alert(data);
+												if(data.success){
+													console.log(data);
 													fill_row(idAct, dataEdited);
 												}
+											},
+											error: function(er) {
+												alert("EDIT không thành công");
 											}
 										})
 									})
@@ -258,7 +251,6 @@ $(document).ready(function () {
 								}
 							}
 							fill_modal(data); 
-							
 						}
 					}
 				})
@@ -349,7 +341,7 @@ $(document).ready(function () {
 			})
 
 			//Click To Delete User
-			$('#delete-users').off('click').on('click', function () {
+			$('document').off('click').on('click', '#delete-users',function () {
 				if(listChecked.length > 0){
 					var isDele = confirm("Are you sure!");
 					if(isDele){

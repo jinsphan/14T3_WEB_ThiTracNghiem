@@ -11,12 +11,12 @@ class login_controller extends vendor_main_controller {
 
 	public function index() {
 		if($_SERVER["REQUEST_METHOD"] == "GET") {
-			if(isset($_SESSION["loginUser"]["username"])) {
-				header("Location: ".vendor_app_util::url([
-					"ctl" => "dashboard"
-				]));
-			}
-			else $this->display();
+			// if(isset($_SESSION["loginUser"]["username"])) {
+			// 	header("Location: ".vendor_app_util::url([
+			// 		"ctl" => "dashboard"
+			// 	]));
+			// }
+			$this->display();
 		}
 
 		if($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -34,7 +34,7 @@ class login_controller extends vendor_main_controller {
 
 				$auth = new vendor_auth_model();
 				if($auth->loginAdmin($account)) {
-					header( "Location: ".vendor_app_util::url(array('ctl'=>'dashboard', 'params'=> [1,2,3])));
+					header( "Location: ".vendor_app_util::url(array('ctl'=>'dashboard')));	
 				}
 				else {
 					$this->error = "Tài khoản hoặc mật khẩu không chính xác!";
