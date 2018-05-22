@@ -437,7 +437,6 @@
             $this->histories = $exam_history_model->readAllByAcc("*", [
                 "conditions" => "account_id = {$_SESSION["loginUser"]["account_id"]}"
             ]);
-            die(var_dump($this->histories));
             $this->display();
         }
 

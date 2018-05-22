@@ -29,6 +29,7 @@
               <span class="caret"></span></button>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li><a href="/quiz/management/page=1">Quản lí bài thi</a></li>
+                <li><a href="/quiz/history">Lịch sử thi</a></li>
                 <li><a href="/account/logout">Đăng xuất</a></li>
               </ul>
             </div>

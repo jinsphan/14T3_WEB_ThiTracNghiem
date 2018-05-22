@@ -204,11 +204,11 @@ header .login-regiser-btn .register-btn a {
 /* HOME  */
 .home-container .container .home-content{
     padding: 0 50px;
+    background-color: white;
 }
 
 .home-container .container .home-content .exam-item-container {
     box-shadow: 0 0 5px grey;
-    background-color: white;
     border-radius: 10px;
     overflow: hidden;
 }
