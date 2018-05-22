@@ -639,7 +639,8 @@
                 $keyword = vendor_app_util::sanitizeInput($params["keyword"]);
                 $quiz_model = new quiz_model();
                 $quizs_data = $quiz_model->search($keyword);
-                die(var_dump($quizs_data));
+                // die(var_dump());
+                echo json_encode($quizs_data);
             }
         }
 
