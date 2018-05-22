@@ -110,29 +110,8 @@
 
 			    		<div class="row">
 			    			<div class="col-sm-5"><div class="dataTables_info" id="table_info" role="status" aria-live="polite">
-			    				<?php echo "Showing 1 to ".NUM_TOP_USERS." of {$this->numAllUsers} entries"; ?>
 			    			</div></div>
 
-			    			<div class="col-sm-7">
-			    				<div class="dataTables_paginate paging_simple_numbers" id="table_paginate">
-			    					<ul class="pagination pull-right">
-			    						<li class="paginate_button previous disabled" id="table_previous">
-			    							<a href="javascript:void(0);" aria-controls="example1" data-dt-idx="0" tabindex="0">Previous</a>
-			    						</li>
-
-			    						<?php for($i = 1; $i <= ceil($this->numAllUsers/NUM_TOP_USERS); $i++){ ?>
-											<li class="paginate_button <?php if($i==1) echo('active') ?>">
-												<a href="javascript:void(0);" aria-controls="example1" data-dt-idx="<?php echo($i); ?>" tabindex="0"><?php echo($i); ?></a>
-											</li>
-										<?php } ?>
-
-											<li class="paginate_button next" id="table_next">
-												<a href="javascript:void(0);" aria-controls="example1" data-dt-idx="<?php echo(ceil($this->numAllUsers/NUM_TOP_USERS)+1) ?>" tabindex="0">Next
-												</a>
-			    						</li>
-			    					</ul>
-			    				</div>
-			    			</div>
 			    		</div>
 			    	</div>
 			    </div>

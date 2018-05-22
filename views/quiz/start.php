@@ -3,10 +3,10 @@
 <link href="<?php echo RootREL; ?>media/css/start.css" rel="stylesheet">
 
 <div class="start-container">
-    <form id="form-quiz-start" quizId="<?= $this->quiz_data["quiz_id"] ?>">
+    <form id="form-quiz-start" quizId="<?= isset($this->quiz_data["quiz_id"]) ? $this->quiz_data["quiz_id"] : "" ?>">
         <div class="container">
             <div class="start-name-quiz text-center">
-                <h3><?= $this->quiz_data["quiz_name"] ?></h3>
+                <h3><?= isset($this->quiz_data["quiz_name"]) ? $this->quiz_data["quiz_name"] : "" ?></h3>
             </div>
             <?php if (!isset($this->error)) { ?>
             <div id="tesst_quiz_content" class="start-content box-shadow">
