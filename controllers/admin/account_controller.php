@@ -164,7 +164,7 @@ class account_controller extends vendor_backend_controller {
 			// $password = vendor_app_util::sanitizeInput((isset($_POST["password"]) ? $_POST["password"] : ""));
 			$fullname = vendor_app_util::sanitizeInput((isset($_POST["fullname"]) ? $_POST["fullname"] : ""));
 			$sex = vendor_app_util::sanitizeInput((isset($_POST["sex"]) ? $_POST["sex"] : ""));
-			$date_of_birth = date("Y:m:d", strtotime(vendor_app_util::sanitizeInput($_POST["date_of_birth"])));
+			$date_of_birth = date("Y:m:d", strtotime(vendor_app_util::sanitizeInput((isset($_POST["date_of_birth"]) ? $_POST["date_of_birth"] : ""))));
 			$role_id = (int)vendor_app_util::sanitizeInput((isset($_POST["role_id"]) ? $_POST["role_id"] : ""));
 			$account_status = (int)vendor_app_util::sanitizeInput((isset($_POST["account_status"]) ? $_POST["account_status"] : ""));
 

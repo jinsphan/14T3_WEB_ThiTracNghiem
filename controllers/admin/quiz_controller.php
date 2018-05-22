@@ -9,7 +9,9 @@ class quiz_controller extends vendor_backend_controller {
 
     public function index() {     // list all quizs
         $quiz_model = new quiz_model();
-        $quizs_data = $quiz_model->readAll("*", " '1'='1' ORDER BY date_created");
+        $quizs_data = $quiz_model->readAll("*", [
+            "conditions" => " '1'='1' ORDER BY date_created"
+        ]);
         echo json_encode($quizs_data);
     }
 

@@ -1,7 +1,13 @@
 <?php
     class quiz_controller extends main_controller {
+
+        public function __construct()
+        {
+            parent::__construct();
+        }
+
         public function index() {
-            
+
         }
 
         public function management($params) {
@@ -617,6 +623,32 @@
                         }
                     }
                 }
+            }
+        }
+
+        public function readAll() {
+            $quiz_model = new quiz_model();
+            $quizs_data = $quiz_model->readAll("*", [
+                "conditions" => " quiz_type_id = 2 ORDER BY date_created"
+            ]);
+            echo json_encode($quizs_data);
+        }
+
+        public function search($params) {
+            if($params != null && isset($params["keyword"])) {
+                $keyword = vendor_app_util::sanitizeInput($params["keyword"]);
+                $quiz_model = new quiz_model();
+                $quizs_data = $quiz_model->search($keyword);
+                die(var_dump($quizs_data));
+            }
+        }
+
+        public function readBySubjectID($params) {
+            if($params != null && isset($params) && is_numeric($params["subject_id"])) {
+                $subject_id = (int)vendor_app_util::sanitizeInput($params["subject_id"]);
+                $quiz_model = new quiz_model();
+                $quizs_data = $quiz_model->readBySubjectID($params["subject_id"]);
+                echo json_encode($quizs_data);
             }
         }
     }
