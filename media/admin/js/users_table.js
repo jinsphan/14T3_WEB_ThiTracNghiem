@@ -27,24 +27,24 @@ $(document).ready(function () {
 		function upload_table(data) {
 			var table_html = "";
 			for(var i = 0; i<data.length; i++){
-				var isChecked = ($.inArray(data[i].id, listChecked)>=0?"checked":"");
+				var isChecked = ($.inArray(data[i].account_id, listChecked)>=0?"checked":"");
 				data[i].status = data[i].status==0?"Disable":(data[i].status==1?"Creating":"Enable");
 				table_html += "\
 					<tr role='row'>\
-						<td id='checkbox"+ data[i].id +"' class='checkboxUser'>\
+						<td id='checkbox"+ data[i].account_id +"' class='checkboxUser'>\
 							<input type='checkbox' name='' "+ isChecked +">\
 						</td>\
-						<td id='username"+ data[i].id +"'>"+ data[i].username +"</td>\
-						<td id='account_status"+ data[i].id +"'>"+ `${data[i].account_status == 1 ? "Enable" : "Disable"}` +"</td>\
-						<td id='date_created"+ data[i].id +"'>"+ data[i].date_created +"</td>\
+						<td id='username"+ data[i].account_id +"'>"+ data[i].username +"</td>\
+						<td id='account_status"+ data[i].account_id +"'>"+ `${data[i].account_status == 1 ? "Enable" : "Disable"}` +"</td>\
+						<td id='date_created"+ data[i].account_id +"'>"+ data[i].date_created +"</td>\
 						<td  class='btn-act' class='pull-right'>\
-							<button id='view"+ data[i].id + "' type='button' class='btn btn-success view-user' data-toggle='modal' data-target='#myModal'>\
+							<button id='view"+ data[i].account_id + "' type='button' class='btn btn-success view-user' data-toggle='modal' data-target='#myModal'>\
 								<i class='fa fa-search-plus' aria-hidden='true'></i>\
 							</button>\
-							<button id='edit"+ data[i].id + "' type='button' class='btn btn-primary edit-user' data-toggle='modal' data-target='#myModal'>\
+							<button id='edit"+ data[i].account_id + "' type='button' class='btn btn-primary edit-user' data-toggle='modal' data-target='#myModal'>\
 								<i class='fa fa-pencil'></i>\
 							</button>\
-							<button id='dele" + data[i].id + "' type='button' class='btn btn-danger dele-user'>\
+							<button id='dele" + data[i].account_id + "' type='button' class='btn btn-danger dele-user'>\
 								<i class='fa fa-trash-o'></i>\
 							</button>\
            				</td>\
@@ -55,7 +55,7 @@ $(document).ready(function () {
 			$('#tbody-users').html(table_html);
 		}
 
-		function get_modal() {
+		function get_modal(isGetPassord = false) {
 			var data = {
 				'username': $('#modal-body #username-modal input').val(),
 				'fullname': $('#modal-body #fullname-modal input').val(),
@@ -63,6 +63,9 @@ $(document).ready(function () {
 				'day_of_birth': $('#modal-body #birthday-modal input').val(),
 				'role_id': $('#modal-body #role-modal select').val(),
 				'account_status': $('#modal-body #status-modal select').val(),
+			}
+			if (isGetPassord) {
+				data.password = $('#modal-body #password-modal input').val();
 			}
 			return data;
 		}
@@ -100,11 +103,11 @@ $(document).ready(function () {
 				success: function (data) {
 					console.log(data);
 					if(data.success){
-						location.reload();
-						// numAllUser--;
-						// numBtnActive = parseInt($('#table_paginate .active a').attr('data-dt-idx'));
-						// load_btnPaginate();
-						// clickBtnPaginate(numBtnActive > numAllBtn?numAllBtn:numBtnActive);
+						// location.reload();
+						numAllUser--;
+						numBtnActive = parseInt($('#table_paginate .active a').attr('data-dt-idx'));
+						load_btnPaginate();
+						clickBtnPaginate(numBtnActive > numAllBtn?numAllBtn:numBtnActive);
 					}
 				},
 				error: function(er) {
@@ -171,16 +174,19 @@ $(document).ready(function () {
 			//View User
 
 			$('#tbody-users').off('click').on('click','.btn-act button', function () {
-
+				
 				var typeAct = this.id.substring(0,4);
 				var idAct = this.id.substring(4, this.id.length);
 				var urlGetData = "?pr=admin/account/read/account_id="+ idAct;
 
 				$('#myModal #modal-title').text(typeAct.toUpperCase() +' User');
+				$("#password-modal").addClass("hidden");
+
 				$.ajax({
 					url: urlGetData,
 					dataType: "json",
 					success: function (data) {
+						console.log(data);
 						if(data){
 							switch(typeAct){
 								case 'view': {
@@ -194,7 +200,7 @@ $(document).ready(function () {
 									data.username = "<input class='form-control' type='text' value='"+data.username+"'/>";
 									data.fullname = "<input class='form-control' type='text' value='"+data.fullname+"'/>";
 									data.sex = "<input class='form-control' type='text' value='"+data.sex+"'/>";
-									data.date_of_birth = "<input class='form-control' type='text' value='"+data.date_of_birth+"'/>";
+									data.date_of_birth = "<input class='form-control' type='date' value='"+data.date_of_birth+"'/>";
 									data.phone = "<input class='form-control' type='text' value='"+data.phone+"'/>";
 									data.address = "<input class='form-control' type='text' value='"+data.address+"'/>";
 
@@ -221,6 +227,7 @@ $(document).ready(function () {
 
 									$('.modal-footer #submit-btn-done').off('click').on('click', function () {
 										var dataEdited = get_modal();
+										console.log(dataEdited);
 										dataEdited.account_id = idAct;
 										var urlEdited = "?pr=admin/account/update";
 
@@ -260,50 +267,59 @@ $(document).ready(function () {
 			$('#add-user').off('click').on('click', function () {
 				var dataAddnew = {};
 				dataAddnew.username = "<input class='form-control' type='text' value=''/>";
-				dataAddnew.email = "<input class='form-control' type='text' value=''/>";
-				dataAddnew.avata = "<input class='form-control' type='text' value=''/>";
-				dataAddnew.firstname = "<input class='form-control' type='text' value=''/>";
-				dataAddnew.lastname = "<input class='form-control' type='text' value=''/>";
+				dataAddnew.fullname = "<input class='form-control' type='text' value=''/>";
+				dataAddnew.sex = "<input class='form-control' type='text' value=''/>";
+				dataAddnew.date_of_birth = "<input class='form-control' type='date' value=''/>";
 				dataAddnew.phone = "<input class='form-control' type='text' value=''/>";
 				dataAddnew.address = "<input class='form-control' type='text' value=''/>";
 
 				dataAddnew.role = "\
 					<div class='form-group'>\
-					  <select class='form-control' id='sel1'>\
-					    <option>2</option>\
-					  </select>\
+						<select class='form-control' id='sel1'>\
+						<option>1</option>\
+						<option>2</option>\
+						</select>\
 					</div>\
 				";
 				dataAddnew.status = "\
 					<div class='form-group'>\
-					  <select class='form-control' id='sel1'>\
-					  	<option>0</option>\
-					    <option>1</option>\
-					    <option>2</option>\
-					  </select>\
+						<select class='form-control' id='sel1'>\
+						<option>0</option>\
+						<option>1</option>\
+						</select>\
 					</div>\
 				";
-				dataAddnew.created = "Auto";
+				dataAddnew.date_created = new Date();
 				fill_modal(dataAddnew);
 				
 				$('.modal-footer button').hide(0);
 				$('#modal-title').text('Add New');
 				$('.modal-footer #submit-btn-add').show(0);
+				$("#password-modal").removeClass("hidden");
 
 				$('.modal-footer #submit-btn-add').off('click').on('click', function () {
-					var dataAddnew = get_modal();
-					var urlAddnew = "?pr=admin/account/create/";
+					const isGetPassord = true;
+					var dataAddnew = get_modal(isGetPassord);
+					const data = {
+						username: dataAddnew.username,
+						password: dataAddnew.password,
+						fullname: dataAddnew.fullname,
+						sex: dataAddnew.sex == "nam" ? "Name" : "Nữ",
+						date_of_birth: dataAddnew.day_of_birth
+					}
+					
+					var urlAddnew = "?pr=admin/account/create";
 					$.ajax({
 						url: urlAddnew,
 						type: "POST",
-						data: dataAddnew,
+						dataType: "JSON",
+						data,
 						success: function (data) {
-							if(data != 'error'){
+							if(data.success){
 								numAllUser++;
 								load_btnPaginate();
 								clickBtnPaginate(numAllBtn);
 							}
-							alert(data);
 						}
 					})
 				})

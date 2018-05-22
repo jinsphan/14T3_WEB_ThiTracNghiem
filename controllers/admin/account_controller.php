@@ -33,9 +33,10 @@ class account_controller extends vendor_backend_controller {
 		$data = array();
 		if($strFil == ""){
 			foreach($rs as $row) {
-				if($row["role_id"] != 1) {
-					$data[] = $row;
-				}
+				// if($row["role_id"] != 1) {
+				// 	$data[] = $row;
+				// }
+				$data[] = $row;
 			}
 		} else{
 			

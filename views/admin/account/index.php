@@ -196,6 +196,12 @@
 				        <td class="col-sm-4">Username</td>
 				        <td class="col-sm-8"></td>
 				      </tr>
+							<tr id="password-modal" class="row hidden">
+				        <td class="col-sm-4">Password</td>
+				        <td class="col-sm-8">
+									<input class="form-control" type="text" value="">
+								</td>
+				      </tr>
 				     	<tr id="fullname-modal" class="row">
 				        <td class="col-sm-4">Fullname</td>
 				        <td class="col-sm-8"></td>
@@ -225,6 +231,7 @@
         </div>
         <div class="modal-footer">
           <button id="submit-btn-view" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button id="submit-btn-add" class="btn btn-default" data-dismiss="modal">Add</button>
           <button id="submit-btn-done" type="button" class="btn btn-default" data-dismiss="modal">Done</button>
         </div>
       </div>
