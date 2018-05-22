@@ -34,6 +34,7 @@ if($noPrs) {
 	}
 }
 
+
 $c = $app['ctl']."_controller";
 
 if(!is_file(ControllerREL.$app['areaPath'].$c.".php")) {
