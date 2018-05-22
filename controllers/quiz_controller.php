@@ -238,15 +238,25 @@
                         $this->error = "Bài thi này chưa được kích hoạt, vui lòng liên hệ với admin để kích hoạt bài thi!";
                         $this->display();
                     }
+
+                    else if($rs["quiz_code"] != null ) {
+                        $this->error = "Bạn không có quyền thi bài thi này";
+                        $this->display();
+                    }
                     else {
                         $this->quiz_data = $rs;
                         $this->s = md5(uniqid("", true));
+                        
+                        // Get history exam
+                        $exam_history_model = new exam_history_model();
+                        $this->history = $exam_history_model->readAllByQuizAndAcc($_SESSION["loginUser"]["account_id"], $this->quiz_id);
+
                         $_SESSION["loginUser"]["currentExam"] = md5($_SESSION["loginUser"]["username"].$this->quiz_id.$this->s);
                         $this->display();
                     }
                 }
 
-                if(isset($params["quiz_code"])) {
+                else if(isset($params["quiz_code"])) {
                     $quiz_model = new quiz_model();
 
                     $quiz_code = vendor_app_util::sanitizeInput($params["quiz_code"]);
