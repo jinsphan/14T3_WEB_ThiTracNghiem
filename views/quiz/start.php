@@ -54,7 +54,7 @@
                             <span>Câu <?= $index+1 ?>:</span>
                         </div>
                         <div class="score-question">
-                            <span>(10 diem)</span>
+                            <span>(<?= round($this->quiz_data["max_score"] / count($this->quiz_data["questions"]), 2)  ?> điểm)</span>
                         </div>
                     </div>
                     <div class="question-content">

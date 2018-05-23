@@ -66,7 +66,7 @@ class quiz_model extends vendor_crud_model {
     }
 
     public function readQA($quiz_id) {
-        $sql = "SELECT quiz_id, quiz_name, max_time, is_random_answer, is_random_question 
+        $sql = "SELECT quiz_id, quiz_name, max_time, max_score, is_random_answer, is_random_question 
                 FROM quizs 
                 WHERE quiz_id = ? 
                 LIMIT 0, 1";
