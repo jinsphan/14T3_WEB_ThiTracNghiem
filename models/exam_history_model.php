@@ -34,7 +34,7 @@ class exam_history_model extends vendor_crud_model {
     }
 
     public function readAccountHistory($quiz_id) {
-        $sql = "SELECT username, quiz_name, num_of_correct, num_of_wrong, total_score, exam_histories.date_created
+        $sql = "SELECT username, fullname, quiz_name, num_of_correct, num_of_wrong, total_score, exam_histories.date_created
                 FROM {$this->table} INNER JOIN accounts ON exam_histories.account_id = accounts.account_id
                 INNER JOIN quizs ON exam_histories.quiz_id = quizs.quiz_id
                 WHERE exam_histories.quiz_id = ?
