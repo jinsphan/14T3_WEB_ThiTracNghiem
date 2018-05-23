@@ -19,7 +19,7 @@ $(document).ready(function() {
                         ${quiz.subject_id}
                     </td>
                     <td>
-                        ${quiz.quiz_type_id == "1" ? "Public" : "Private"}
+                        ${quiz.quiz_type_id == "2" ? "" : ""}
                     </td>
                     <td>
                        ${quiz.quiz_status == "1" ? "Accepted" : "Pending"}
