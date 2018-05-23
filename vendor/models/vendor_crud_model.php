@@ -72,7 +72,7 @@ class vendor_crud_model extends vendor_main_model {
             $stmt->execute($datas);
             return $this->conn->lastInsertId();
         } catch(Exception $e) {
-            return 0;
+            die($e->getMessage());
         }
     }
 

@@ -22,7 +22,7 @@
                     <th>MAX SCORE</th>
                     <th>MAX TIME</th>
                     <th>STATUS</th>
-                    <th>ACTION</th>
+                    <th>ACCOUNTS PARTICIPATED</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,7 +39,7 @@
                     <td><?= $quiz_data["quiz_status"] == "1" ? "Accepted" : "Pendding" ?></td>
                     
                     <td>
-                        <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                        <a class="btn btn-info" href="/quiz/account_participated/quiz_id=<?=$quiz_data["quiz_id"] ?>/s=<?=$this->s?>"><i class="fas fa-eye-alt"></i></a>
                     </td>
                 </tr>
                 <?php } ?>

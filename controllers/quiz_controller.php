@@ -19,7 +19,8 @@
             $data = $quiz_model->getQuizsByAccountId($account_id, $numPage);
             $this->quizs_data = $data["quizs_data"];
             $this->total_quizs = $data["total_quiz"]["total"];
-            
+            $this->s = md5(uniqid("", true));
+            $_SESSION["loginUser"]["privateKey"] = md5($_SESSION["loginUser"]["username"].$this->s);
             $this->display();
         }
 
@@ -138,18 +139,18 @@
                             ];
                             $question_id = $question_model->create($question_data);
                             $correct_answers = explode(",", $question["correct_answers"]);
-                                $keys = array_keys($question);
-                                for($i = 2; $i < count($question); $i++) {
-                                    $is_correct_answer = 0;
-                                    if(in_array((string)($i-1), $correct_answers))
-                                        $is_correct_answer = 1;
-                                    $answer_data = [
-                                        "answer_description" => $question[$keys[$i]],
-                                        "question_id"  => $question_id,
-                                        "is_correct_answer" => $is_correct_answer
-                                    ];
-                                    $answer_model->create($answer_data);
-                                }     
+                            $keys = array_keys($question);
+                            for($i = 2; $i < count($question); $i++) {
+                                $is_correct_answer = 0;
+                                if(in_array((string)($i-1), $correct_answers))
+                                    $is_correct_answer = 1;
+                                $answer_data = [
+                                    "answer_description" => $question[$keys[$i]],
+                                    "question_id"  => $question_id,
+                                    "is_correct_answer" => $is_correct_answer
+                                ];
+                                $answer_model->create($answer_data);
+                            }     
                         }
                         
                         if($quiz_type_id == 1)
@@ -628,7 +629,7 @@
         public function readAll() {
             $quiz_model = new quiz_model();
             $quizs_data = $quiz_model->readAll("*", [
-                "conditions" => " quiz_type_id = 2 ORDER BY date_created"
+                "conditions" => " quiz_type_id = 2 AND quiz_status = 1 ORDER BY date_created"
             ]);
             return $quizs_data;
             // echo json_encode($quizs_data);
@@ -652,6 +653,28 @@
         
                 echo json_encode($quizs_data);
                 // return $quizs_data;
+            }
+        }
+
+        public function account_participated($params) {
+            $this->checkLoggedIn();
+            if($params != null && count($params == 2)) {
+                if(isset($params["quiz_id"]) && isset($params["s"]) && is_numeric($params["quiz_id"])) {
+                    $privateKey = md5($_SESSION["loginUser"]["username"].$params["s"]);
+                    if(!isset($_SESSION["loginUser"]["privateKey"]) || $privateKey != $_SESSION["loginUser"]["privateKey"]) {
+                        header("Location: ".html_helper::url([
+                            "ctl" => "home"
+                        ]));
+                    }
+                    else {
+                        unset($_SESSION["loginUser"]["privateKey"]);
+                        $quiz_id = (int)vendor_app_util::sanitizeInput($params["quiz_id"]);
+                        $exam_history_model = new exam_history_model();
+                        $this->history_data = $exam_history_model->readAccountHistory($quiz_id);
+                        $this->display();
+                        // die(var_dump($this->history_data));
+                    }
+                }
             }
         }
     }

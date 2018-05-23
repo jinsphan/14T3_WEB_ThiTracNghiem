@@ -132,7 +132,7 @@ CREATE TABLE answers(
 
     FOREIGN KEY(question_id)
         REFERENCES questions(question_id)
-);
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;;
 
 CREATE TABLE exam_histories(
     exam_history_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
